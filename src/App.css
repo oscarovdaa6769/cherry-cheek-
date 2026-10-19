@@ -1,0 +1,81 @@
+:root {
+    /* color */
+    --primary-color: #1D4533;
+    --secondary-color: #F7EAE0;
+    --footer-color: #5E3122;
+    --description-color: #6B7280;
+    --card-color: #FFFFFF;
+    --cta-color: #F9D2BA;
+    --background-color: #FAFAFA;
+    --border-color: #E5E5E5;
+    /* Heading */
+    --text-header-1: 48px;
+    --text-header-2: 44px;
+    --text-header-3: 40px;
+    --text-header-4: 36px;
+    --text-header-5: 32px;
+    --text-header-6: 28px;
+
+    /* Body */
+    --text-body-1: 24px;
+    --text-body-2: 20px;
+    --text-body-3: 16px;
+    --text-body-4: 14px;
+
+    /* Small text */
+    --text-small-1: 12px;
+    --text-small-2: 10px;
+    --text-small-3: 8px;
+}
+/* Typography styles */
+h1 {
+  font-size: var(--text-header-1);
+}
+
+h2 {
+  font-size: var(--text-header-2);
+}
+
+h3 {
+  font-size: var(--text-header-3);
+}
+
+h4 {
+  font-size: var(--text-header-4);
+}
+
+h5 {
+  font-size: var(--text-header-5);
+}
+
+h6 {
+  font-size: var(--text-header-6);
+}
+
+.body-1 {
+  font-size: var(--text-body-1);
+}
+
+.body-2 {
+  font-size: var(--text-body-2);
+}
+
+.body-3 {
+  font-size: var(--text-body-3);
+}
+
+.body-4 {
+  font-size: var(--text-body-4);
+}
+
+.small-1 {
+  font-size: var(--text-small-1);
+}
+
+.small-2 {
+  font-size: var(--text-small-2);
+}
+
+.small-3 {
+  font-size: var(--text-small-3);
+}
