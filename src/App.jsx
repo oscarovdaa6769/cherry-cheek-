@@ -1,9 +1,10 @@
 import Header from "./components/Header"
 import ProductCard from "./components/ProductCard";
+import "./App.css"
 
 function App() {
     return (
-        <div>
+        <div className="container">
             <Header />
             <ProductCard name="Ah Jo" price={12.00} />
             <ProductCard name="Ah Ach" price={18.00} />

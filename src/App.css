@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins&display=swap');
+
 :root {
     /* color */
     --primary-color: #1D4533;
@@ -26,6 +28,10 @@
     --text-small-1: 12px;
     --text-small-2: 10px;
     --text-small-3: 8px;
+
+    /* font family */
+    --font-sans: "Poppins", sans-serif;
+    --font-heading: "Abril Fatface", serif;
 }
 /* Typography styles */
 h1 {
@@ -78,4 +84,52 @@ h6 {
 
 .small-3 {
   font-size: var(--text-small-3);
+}
+
+.container {
+    font-family: var(--font-sans);
+}
+
+header {
+    background: var(--primary-color);
+    padding: 16px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.nav-btn:hover {
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+.mini-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-icon a {
+    color: var(--secondary-color);
+}
+.mini-icon .icon {
+    border: 1px solid var(--secondary-color);
+    border-radius: 50%;
+    padding: 10px;
+    font-size: 20px;
 }

@@ -1,23 +1,30 @@
+import "../App.css";
+import { Icon } from "@iconify/react";
+
 function Header() {
     return (
-        <div className="navbar">
-            <div>logo</div>
-            <ul>
-                <li><a href="">home</a></li>
-                <li><a href="">product</a></li>
-                <li><a href="">about</a></li>
-                <li><a href="">contact</a></li>
-            </ul>
-            <div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24">
-                    <path d="M0 0h24v24H0z" fill="none" />
-                    <g fill="currentColor">
-                        <path d="M12 13C16.4183 13 20 15.0147 20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13Z" />
-                        <path d="M12 2C14.2091 2 16 3.79086 16 6C16 8.20914 14.2091 10 12 10C9.79086 10 8 8.20914 8 6C8 3.79086 9.79086 2 12 2Z" />
-                    </g>
-                </svg>
-            </div>
-        </div>
+        <header>
+            <nav>
+                <img src="public/logo.png" alt="" />
+                <ul>
+                    <li><a className="nav-btn" href="/">Home</a></li>
+                    <li><a className="nav-btn" href="/product">Product</a></li>
+                    <li><a className="nav-btn" href="/about">About</a></li>
+                    <li><a className="nav-btn" href="/contact">Contact</a></li>
+                </ul>
+                <div className="mini-icon">
+                    <a href="/profile">
+                        <Icon icon="solar:user-bold" className="icon"/>
+                    </a>
+                    <a href="/cart">
+                        <Icon icon="solar:cart-3-bold" className="icon"/>
+                    </a>
+                    <a href="/wishlist">
+                        <Icon icon="solar:bookmark-bold" className="icon"/>
+                    </a>
+                </div>
+            </nav>
+        </header>
     )
 }
 
