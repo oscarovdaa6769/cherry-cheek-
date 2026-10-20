@@ -1,4 +1,5 @@
 import './App.css';
+import './Hero.css';
 import Header from "./components/Header"
 import ProductCard from "./components/ProductCard";
 import Hero from "./components/Hero";

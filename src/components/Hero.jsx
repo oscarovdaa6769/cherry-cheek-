@@ -1,13 +1,12 @@
+import cherryCheek from '../assets/images/cherryCheek.png';
+
 function Hero() {
   return (
     <section
       className="hero"
-    style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/images/cherry-cheek.jpg')`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        width: "100%",}}
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${cherryCheek})`,
+      }}
     >
       <div className="hero-content">
         <p className="hero-label">
