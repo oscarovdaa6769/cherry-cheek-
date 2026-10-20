@@ -91,6 +91,7 @@ h6 {
     font-family: var(--font-sans);
 }
 
+/* Header */
 header {
     background: var(--primary-color);
     padding: 8px 0;
@@ -142,18 +143,120 @@ ul {
   border: 1px solid var(--hover-color);
 }
 
-.btn {
+/* Home */
+.hero {
+  position: relative;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 12px 24px;
+  padding: 140px 4.3%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 390px;
+  margin-left: 1%;
+  color: var(--card-color);
+}
+
+.hero-label {
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.hero-heading {
+  text-transform: uppercase;
+}
+
+.hero-description {
+  font-style: italic;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: var(--text-header-6);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.hero-description {
+  max-width: 330px;
+  margin: 0 0 16px;
+  font-size: var(--text-body-4);
+  line-height: 1.4;
+}
+
+.hero-button {
+  display: inline-block;
+  padding: 10px 32px;
+  border-radius: 30px;
   background-color: var(--primary-color);
   color: var(--card-color);
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  font-size: var(--text-body-4);
+  font-style: italic;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.hero-button:hover {
+  background-color: var(--footer-color);
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 430px;
+    padding: 35px 6%;
+    background-position: center;
+  }
+
+  .hero-content {
+    max-width: 320px;
+    margin-left: 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Button */
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+  padding: 12px 24px;
+
+  background-color: var(--primary-color);
+  color: var(--card-color);
+
+  border: none;
+  border-radius: 8px;
+
+  font: inherit;
   cursor: pointer;
+  text-decoration: none;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .btn:hover {
   background-color: var(--hover-color);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
 }

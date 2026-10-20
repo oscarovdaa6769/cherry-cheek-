@@ -1,20 +1,12 @@
-import Navbar from "./components/Navbar";
-import Card from "./components/Card";
+import Card from "./components/Card"
+import Header from "./components/layout/Header"
+import Hero from "./components/layout/Hero"
 
 function App() {
   return (
-    <div>
-      
-     
-
-      <Card
-        image="/makeup.jpg"
-        category="Face Essentials"
-        title="Rose Glow Set"
-        price={32}
-        rating={0}
-        outOfStock={true}
-      />
+    <div className="container">
+      <Header />
+      <Hero />
     </div>
   );
 }

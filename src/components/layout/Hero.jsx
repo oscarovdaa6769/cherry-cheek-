@@ -1,19 +1,20 @@
-import cherryCheek from '../assets/images/cherryCheek.png';
+import CherryCheek from '../../assets/images/cherryCheek.png';
+import Btn from "../common/Button"
 
 function Hero() {
   return (
     <section
       className="hero"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${cherryCheek})`,
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${CherryCheek})`,
       }}
     >
       <div className="hero-content">
-        <p className="hero-label">
+        <p className="hero-label small-1">
           CHERRY CHEEK · SKINCARE COLLECTION
         </p>
 
-        <h1>Your Skin, Your Natural Glow.</h1>
+        <h1 className='hero-heading'>Your Skin, Your Natural Glow.</h1>
 
         <p className="hero-description">
           Discover gentle skincare made to nourish
@@ -21,9 +22,7 @@ function Hero() {
           beauty, every day.
         </p>
 
-        <a href="#products" className="hero-button">
-          Shop Now
-        </a>
+        <Btn name="Shop now"/>
       </div>
     </section>
   );
