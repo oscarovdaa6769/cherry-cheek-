@@ -1,4 +1,4 @@
-import "../App.css";
+import "../../App.css";
 import { Icon } from "@iconify/react";
 
 function Header() {

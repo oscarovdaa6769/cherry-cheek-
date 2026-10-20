@@ -1,7 +1,8 @@
-import Sidebar from "../components/layout/Sidebar";
+import Sidebar from "../components/admin/Sidebar";
 import "./AdminLayout.css"
+import { Outlet } from "react-router-dom"
 
-function AdminLayout({ children }) {
+function AdminLayout() {
     return (
         <div className="admin-layout">
             <Sidebar />
@@ -9,7 +10,7 @@ function AdminLayout({ children }) {
             <main className="admin-main">
 
             <section className="admin-content">
-                { children }
+                <Outlet />  
             </section>
             </main>
         </div>

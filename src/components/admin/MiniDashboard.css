@@ -1,0 +1,76 @@
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  padding: 1.5rem;
+  background-color: var(--background-color);
+  font-family: var(--font-sans);
+}
+
+.stat-card {
+  position: relative;
+  background-color: var(--card-color);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+  border-left: 8px solid var(--primary-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-title {
+  color: var(--primary-color);
+  font-size: var(--text-body-3);
+  font-weight: 500;
+}
+
+.icon-wrapper {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-count {
+  font-size: var(--text-header-6);
+  font-family: var(--font-sans);
+  color: var(--primary-color);
+  margin: 0.75rem 0;
+  font-weight: bolder;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.badge {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  padding: 4px 8px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.growth-text {
+  font-size: var(--text-body-4);
+  color: var(--description-color);
+  font-style: italic;
+  font-weight: 400;
+}
