@@ -5,7 +5,9 @@ function Header() {
     return (
         <header>
             <nav>
-                <img src="public/logo.png" alt="" />
+                <a href="/">
+                    <img src="src/assets/images/logo.png" alt="Cherry Cheek" />
+                </a>
                 <ul>
                     <li><a className="nav-btn" href="/">Home</a></li>
                     <li><a className="nav-btn" href="/product">Product</a></li>

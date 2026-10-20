@@ -10,6 +10,7 @@
     --cta-color: #F9D2BA;
     --background-color: #FAFAFA;
     --border-color: #E5E5E5;
+    --hover-color: #183829;
     /* Heading */
     --text-header-1: 48px;
     --text-header-2: 44px;
@@ -92,7 +93,7 @@ h6 {
 
 header {
     background: var(--primary-color);
-    padding: 16px 0;
+    padding: 8px 0;
 }
 
 nav {
@@ -126,10 +127,33 @@ ul {
 
 .mini-icon a {
     color: var(--secondary-color);
-}
-.mini-icon .icon {
     border: 1px solid var(--secondary-color);
     border-radius: 50%;
-    padding: 10px;
-    font-size: 20px;
+    padding: 8px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.mini-icon a:hover {
+  background-color: var(--hover-color);
+  border: 1px solid var(--hover-color);
+}
+
+.btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: var(--primary-color);
+  color: var(--card-color);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: var(--hover-color);
 }
