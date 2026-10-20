@@ -4,9 +4,8 @@ import Card from "./components/Card";
 function App() {
   return (
     <div>
-      <Navbar />
-
-      <h1>My Products</h1>
+      
+     
 
       <Card
         image="/makeup.jpg"
