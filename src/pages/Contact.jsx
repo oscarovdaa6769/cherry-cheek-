@@ -1,500 +1,181 @@
-
 import { useState } from "react";
-import "./Order.css";
+import "./Contact.css";
 
-const initialProducts = [
+// Replace these with your own images (e.g. import from src/assets)
+const PLACEHOLDER =
+  "https://www.personalcarecouncil.org/wp-content/smush-webp/2025/03/AdobeStock_218950992-square-crop.jpeg.webp";
+const journalImages = [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER];
+
+const contactDetails = [
   {
-    id: 1,
-    name: "Hydrating Face Cream",
-    description: "Moisturizer · 50ml",
-    price: 18,
-    image:
-      "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&auto=format&fit=crop",
-    quantity: 1,
+    icon: "✉",
+    title: "Visit our office branch",
+    lines: ["info@cherrycheek.com"],
+    note: "For product questions and a little skin advice.",
   },
   {
-    id: 2,
-    name: "Rose Lipstick",
-    description: "Rose Petal · 3.5g",
-    price: 16,
-    image:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=200&auto=format&fit=crop",
-    quantity: 1,
+    icon: "⌖",
+    title: "Chat us",
+    lines: ["101 E. Madison Street, Baltimore, MD 21202, USA"],
   },
   {
-    id: 3,
-    name: "Vitamin C Sheet Mask",
-    description: "Brightening · 5pcs",
-    price: 12,
-    image:
-      "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=200&auto=format&fit=crop",
-    quantity: 1,
+    icon: "✆",
+    title: "Call us",
+    lines: ["+1 (410) 555-0130"],
+    note: "Monday–Friday · 9am–5pm EST",
   },
 ];
 
-function Order() {
-  const [products, setProducts] = useState(initialProducts);
-  const [delivery, setDelivery] = useState("standard");
-  const [payment, setPayment] = useState("card");
-  const [step, setStep] = useState(1);
-
+function Contact() {
   const [form, setForm] = useState({
     name: "",
-    phone: "",
     email: "",
-    address: "",
-    province: "",
-    postcode: "",
+    comment: "",
+    save: false,
   });
+  const [sent, setSent] = useState(false);
 
-  const subtotal = products.reduce(
-    (sum, product) => sum + product.price * product.quantity,
-    0
-  );
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setForm((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+  };
 
-  const shipping = delivery === "standard" ? 3 : 0;
-  const total = subtotal + shipping;
-
-  function updateForm(event) {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
-  }
-
-  function changeQuantity(id, amount) {
-    setProducts((current) =>
-      current.map((product) =>
-        product.id === id
-          ? {
-              ...product,
-              quantity: Math.max(1, product.quantity + amount),
-            }
-          : product
-      )
-    );
-  }
-
-  function removeProduct(id) {
-    setProducts((current) =>
-      current.filter((product) => product.id !== id)
-    );
-  }
-
-  function continueOrder(event) {
-    event.preventDefault();
-
-    if (products.length === 0) {
-      alert("Your order is empty.");
-      return;
-    }
-
-    if (step === 1) {
-      setStep(2);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    if (step === 2) {
-      setStep(3);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
-
-    alert(
-      `Order ready for review!\nName: ${form.name}\nTotal: $${total.toFixed(2)}\nPayment: ${payment}`
-    );
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("Contact form submitted:", form);
+    setSent(true);
+    setForm({ name: "", email: "", comment: "", save: false });
+  };
 
   return (
-    <div className="order-page">
-    
-
-      <section className="order-hero">
-        <div>
-          <span className="order-eyebrow">CHECKOUT</span>
-          <h1>Order</h1>
-          <p>
-            Complete your purchase and get your favorite
-            beauty products delivered to your door.
-          </p>
-        </div>
+    <main className="contact">
+      {/* Contact hero */}
+      <section className="contact-hero">
+        <p className="contact-eyebrow">We're here for you</p>
+        <h1 className="contact-title">Contact us</h1>
+        <p className="contact-description">A little care, a conversation away.</p>
+        <p className="contact-breadcrumb">
+          <a href="/">Home</a> / <span>Contact</span>
+        </p>
       </section>
 
-      <main className="order-container">
-        <div className="order-steps">
-          {["Shipping", "Payment", "Review & Confirm"].map(
-            (label, index) => (
-              <div
-                className={`order-step ${
-                  step === index + 1 ? "active" : ""
-                } ${step > index + 1 ? "completed" : ""}`}
-                key={label}
-              >
-                <span>
-                  {step > index + 1 ? "✓" : index + 1}
+      {/* Contact information and enquiry */}
+      <section className="contact-main">
+        <div className="contact-branch">
+          <p className="contact-label">Contact us</p>
+          <h2 className="contact-heading">Our branch office</h2>
+          <p className="contact-office">USA Head Office</p>
+
+          <ul className="contact-list">
+            {contactDetails.map((item) => (
+              <li key={item.title} className="contact-item">
+                <span className="contact-icon" aria-hidden="true">
+                  {item.icon}
                 </span>
-                <p>{label}</p>
-              </div>
-            )
-          )}
+                <div>
+                  <p className="contact-item-title">{item.title}</p>
+                  {item.lines.map((line) => (
+                    <p key={line} className="contact-item-line">
+                      {line}
+                    </p>
+                  ))}
+                  {item.note && <p className="contact-item-note">{item.note}</p>}
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <form className="order-layout" onSubmit={continueOrder}>
-          <div className="order-left">
-            {step === 1 && (
-              <>
-                <section className="order-card">
-                  <div className="section-heading">
-                    <span className="section-icon">♧</span>
-                    <div>
-                      <h2>Shipping Information</h2>
-                      <p>Enter your delivery details</p>
-                    </div>
-                  </div>
+        <form className="contact-form" onSubmit={handleSubmit}>
+          <h2 className="contact-heading">Enquiries &amp; offers</h2>
+          <p className="contact-form-intro">
+            Get in touch about an order or a product. Have a question? We're always
+            happy to help.
+          </p>
 
-                  <div className="order-field">
-                    <label>Full Name *</label>
-                    <input
-                      name="name"
-                      value={form.name}
-                      onChange={updateForm}
-                      placeholder="Your full name"
-                      required
-                    />
-                  </div>
-
-                  <div className="order-field-grid">
-                    <div className="order-field">
-                      <label>Phone Number *</label>
-                      <input
-                        name="phone"
-                        type="tel"
-                        value={form.phone}
-                        onChange={updateForm}
-                        placeholder="+855 12 345 678"
-                        required
-                      />
-                    </div>
-
-                    <div className="order-field">
-                      <label>Email Address *</label>
-                      <input
-                        name="email"
-                        type="email"
-                        value={form.email}
-                        onChange={updateForm}
-                        placeholder="you@example.com"
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div className="order-field">
-                    <label>Address *</label>
-                    <input
-                      name="address"
-                      value={form.address}
-                      onChange={updateForm}
-                      placeholder="House number, street, village"
-                      required
-                    />
-                  </div>
-
-                  <div className="order-field-grid">
-                    <div className="order-field">
-                      <label>City / Province *</label>
-                      <select
-                        name="province"
-                        value={form.province}
-                        onChange={updateForm}
-                        required
-                      >
-                        <option value="">Select province</option>
-                        <option>Phnom Penh</option>
-                        <option>Kandal</option>
-                        <option>Siem Reap</option>
-                        <option>Battambang</option>
-                        <option>Kampong Cham</option>
-                        <option>Other</option>
-                      </select>
-                    </div>
-
-                    <div className="order-field">
-                      <label>Postcode *</label>
-                      <input
-                        name="postcode"
-                        value={form.postcode}
-                        onChange={updateForm}
-                        placeholder="e.g. 12000"
-                        required
-                      />
-                    </div>
-                  </div>
-                </section>
-
-                <section className="order-card">
-                  <div className="section-heading">
-                    <span className="section-icon">♧</span>
-                    <div>
-                      <h2>Delivery Method</h2>
-                      <p>Choose how you want your order delivered</p>
-                    </div>
-                  </div>
-
-                  <label className={`choice-card ${delivery === "standard" ? "selected" : ""}`}>
-                    <input
-                      type="radio"
-                      name="delivery"
-                      checked={delivery === "standard"}
-                      onChange={() => setDelivery("standard")}
-                    />
-                    <span className="choice-icon">♧</span>
-                    <span className="choice-details">
-                      <strong>Standard Delivery</strong>
-                      <small>3–5 business days</small>
-                    </span>
-                    <strong>$3.00</strong>
-                  </label>
-
-                  <label className={`choice-card ${delivery === "pickup" ? "selected" : ""}`}>
-                    <input
-                      type="radio"
-                      name="delivery"
-                      checked={delivery === "pickup"}
-                      onChange={() => setDelivery("pickup")}
-                    />
-                    <span className="choice-icon">⌂</span>
-                    <span className="choice-details">
-                      <strong>Pick Up at Store</strong>
-                      <small>Collect your order from our store</small>
-                    </span>
-                    <strong>Free</strong>
-                  </label>
-                </section>
-              </>
-            )}
-
-            {step === 2 && (
-              <section className="order-card">
-                <div className="section-heading">
-                  <span className="section-icon">▤</span>
-                  <div>
-                    <h2>Payment Method</h2>
-                    <p>Select your preferred payment method</p>
-                  </div>
-                </div>
-
-                {[
-                  ["card", "Credit / Debit Card", "VISA · Mastercard"],
-                  ["aba", "ABA Bank", "ABA"],
-                  ["cod", "Cash on Delivery", "Pay upon delivery"],
-                ].map(([value, label, detail]) => (
-                  <label
-                    className={`choice-card ${payment === value ? "selected" : ""}`}
-                    key={value}
-                  >
-                    <input
-                      type="radio"
-                      name="payment"
-                      checked={payment === value}
-                      onChange={() => setPayment(value)}
-                    />
-                    <span className="choice-icon">▤</span>
-                    <span className="choice-details">
-                      <strong>{label}</strong>
-                      <small>{detail}</small>
-                    </span>
-                  </label>
-                ))}
-
-                <p className="payment-note">
-                  This is a front-end demo. No payment will be
-                  processed.
-                </p>
-              </section>
-            )}
-
-            {step === 3 && (
-              <section className="order-card">
-                <div className="section-heading">
-                  <span className="section-icon">✓</span>
-                  <div>
-                    <h2>Review & Confirm</h2>
-                    <p>Please check your details before continuing.</p>
-                  </div>
-                </div>
-
-                <div className="review-section">
-                  <h3>Delivery Address</h3>
-                  <p>{form.name}</p>
-                  <p>{form.phone}</p>
-                  <p>{form.email}</p>
-                  <p>
-                    {form.address}, {form.province}, {form.postcode}
-                  </p>
-                </div>
-
-                <div className="review-section">
-                  <h3>Delivery & Payment</h3>
-                  <p>
-                    {delivery === "standard"
-                      ? "Standard Delivery · $3.00"
-                      : "Pick Up at Store · Free"}
-                  </p>
-                  <p>
-                    Payment:{" "}
-                    {payment === "card"
-                      ? "Credit / Debit Card"
-                      : payment === "aba"
-                      ? "ABA Bank"
-                      : "Cash on Delivery"}
-                  </p>
-                </div>
-
-                <p className="payment-note">
-                  Demo only: confirming displays your order details
-                  but does not submit an order to a server.
-                </p>
-              </section>
-            )}
-
-            <section className="order-card payment-card">
-              <div className="section-heading">
-                <span className="section-icon">♡</span>
-                <div>
-                  <h2>Shop With Confidence</h2>
-                  <p>We care about your beauty and your experience.</p>
-                </div>
-              </div>
-              <div className="trust-grid">
-                <span>♧ <small>Natural beauty</small></span>
-                <span>↻ <small>Easy returns</small></span>
-                <span>♡ <small>Customer care</small></span>
-              </div>
-            </section>
-
-            <div className="order-actions">
-              {step > 1 && (
-                <button
-                  type="button"
-                  className="back-button"
-                  onClick={() => setStep(step - 1)}
-                >
-                  ← Back
-                </button>
-              )}
-
-              <button
-                type="submit"
-                className="continue-button"
-                disabled={products.length === 0}
-              >
-                {step === 1
-                  ? "Continue to Payment →"
-                  : step === 2
-                  ? "Review Order →"
-                  : "Confirm Order ✓"}
-              </button>
-            </div>
+          <div className="contact-row">
+            <label className="contact-field">
+              <span>Name *</span>
+              <input
+                type="text"
+                name="name"
+                placeholder="Your name"
+                value={form.name}
+                onChange={handleChange}
+                required
+              />
+            </label>
+            <label className="contact-field">
+              <span>Email *</span>
+              <input
+                type="email"
+                name="email"
+                placeholder="Your email address"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
+            </label>
           </div>
 
-          <aside className="order-summary">
-            <div className="summary-heading">
-              <h2>♧ &nbsp; Order Summary</h2>
-              <span>{products.length} items</span>
-            </div>
+          <label className="contact-field">
+            <span>Comment *</span>
+            <textarea
+              name="comment"
+              rows="4"
+              placeholder="How can we help you?"
+              value={form.comment}
+              onChange={handleChange}
+              required
+            />
+          </label>
 
-            {products.map((product) => (
-              <div className="summary-product" key={product.id}>
-                <img src={product.image} alt={product.name} />
+          <label className="contact-check">
+            <input
+              type="checkbox"
+              name="save"
+              checked={form.save}
+              onChange={handleChange}
+            />
+            <span>Save my name, email, and website in this browser.</span>
+          </label>
 
-                <div className="summary-product-info">
-                  <div className="product-title-row">
-                    <strong>{product.name}</strong>
-                    <button
-                      type="button"
-                      className="remove-product"
-                      aria-label={`Remove ${product.name}`}
-                      onClick={() => removeProduct(product.id)}
-                    >
-                      ×
-                    </button>
-                  </div>
+          <button type="submit" className="btn contact-submit">
+            Send message →
+          </button>
 
-                  <small>{product.description}</small>
-                  <strong>${product.price.toFixed(2)}</strong>
-
-                  <div className="quantity-control">
-                    <button
-                      type="button"
-                      aria-label="Decrease quantity"
-                      onClick={() => changeQuantity(product.id, -1)}
-                    >
-                      −
-                    </button>
-                    <span>{product.quantity}</span>
-                    <button
-                      type="button"
-                      aria-label="Increase quantity"
-                      onClick={() => changeQuantity(product.id, 1)}
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <strong className="product-line-total">
-                  ${(product.price * product.quantity).toFixed(2)}
-                </strong>
-              </div>
-            ))}
-
-            {products.length === 0 && (
-              <p className="empty-order">
-                Your order is empty. Return to the shop to add products.
-              </p>
-            )}
-
-            <div className="summary-totals">
-              <div>
-                <span>Subtotal</span>
-                <strong>${subtotal.toFixed(2)}</strong>
-              </div>
-              <div>
-                <span>Shipping</span>
-                <strong>${shipping.toFixed(2)}</strong>
-              </div>
-              <div>
-                <span>Tax</span>
-                <strong>$0.00</strong>
-              </div>
-              <div className="grand-total">
-                <span>Total</span>
-                <strong>${total.toFixed(2)}</strong>
-              </div>
-            </div>
-
-            <div className="secure-note">
-              <span>✓</span>
-              <div>
-                <strong>Your information is safe</strong>
-                <small>Checkout design demo · No real payment</small>
-              </div>
-            </div>
-
-            <div className="summary-benefits">
-              <span>♧ <small>Beauty care</small></span>
-              <span>↻ <small>Easy returns</small></span>
-              <span>♡ <small>Natural products</small></span>
-            </div>
-          </aside>
+          {sent && (
+            <p className="contact-success" role="status">
+              Thanks! Your message has been sent.
+            </p>
+          )}
         </form>
-      </main>
+      </section>
 
-     
-    </div>
+      {/* Location map */}
+    <section className="contact-map" aria-label="Phnom Penh location map">
+  <div className="contact-map-card">
+    <iframe
+      title="Phnom Penh, Cambodia map"
+      src="https://www.google.com/maps?q=Phnom+Penh,+Cambodia&output=embed"
+      width="100%"
+      height="100%"
+      style={{ border: 0 }}
+      loading="lazy"
+      allowFullScreen
+      referrerPolicy="no-referrer-when-downgrade"
+    />
+  </div>
+</section>
+
+      {/* Skincare photo journal */}
+      <section className="contact-gallery" aria-label="Skincare photo journal">
+        {journalImages.map((src, i) => (
+          <img key={i} src={src} alt={`Skincare journal ${i + 1}`} />
+        ))}
+      </section>
+    </main>
   );
 }
 
-export default Order;
+export default Contact;

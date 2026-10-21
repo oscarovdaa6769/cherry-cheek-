@@ -1,12 +1,13 @@
 import Header from "./components/layout/Header"
 import Hero from "./components/layout/Hero"
 import Footer from "./components/layout/Footer"
+import Contact from "./pages/Contact"
 
 function App() {
   return (
     <div className="container">
       <Header />
-      <Hero />
+      <Contact />
       <Footer />
     </div>
   );
