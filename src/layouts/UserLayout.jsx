@@ -3,7 +3,7 @@ import { Outlet, Link } from "react-router-dom"
 
 function UserLayout() {
     return (
-        <div className="container">
+        <div>
             <Header />
             <main className="">
                 <Outlet />

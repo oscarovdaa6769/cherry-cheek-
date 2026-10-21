@@ -1,10 +1,18 @@
-import "../App.css";
+import "../../App.css";
+import { useNavigate } from "react-router-dom";
 
 function Button({name}) {
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        if (name === 'Back') {
+            navigate(-1);
+        }
+    }
     return (
-        <div className="btn">
+        <button className="btn" type="button" onClick={handleClick}>
             {name}
-        </div>
+        </button>
     )
 }
 

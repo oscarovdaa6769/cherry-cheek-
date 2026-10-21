@@ -1,0 +1,14 @@
+.review-container {
+    display: flex;
+    gap: 4px;
+}
+
+.star-filled {
+    color: #FFC107;
+    font-size: 16px;
+}
+
+.star-empty {
+    color: var(--description-color);
+    font-size: 16px;
+}

@@ -1,0 +1,205 @@
+.profile-page {
+    padding: 40px 0;
+    background-color: var(--background-color);
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.profile-container {
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 32px;
+}
+
+.profile-title {
+    font-size: var(--text-header-3);
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.profile-content-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 24px;
+    align-items: start;
+}
+
+@media (max-width: 768px) {
+    .profile-content-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Cards */
+.profile-card, 
+.profile-details-card {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.avatar-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.avatar-box {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+}
+
+.avatar-icon {
+    font-size: 32px;
+    color: var(--primary-color);
+}
+
+.user-name {
+    font-size: var(--text-body-2);
+    color: var(--primary-color);
+    margin: 0 0 4px 0;
+}
+
+.user-email {
+    font-size: var(--text-small-1);
+    color: var(--description-color);
+}
+
+/* Nav Menu */
+.profile-nav-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 20px;
+}
+
+.profile-link-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--primary-color);
+    font-size: var(--text-body-4);
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+}
+
+.profile-link-item:hover {
+    background-color: var(--background-color);
+}
+
+.profile-link-item svg:first-child {
+    font-size: 18px;
+}
+
+.arrow-icon {
+    margin-left: auto;
+    color: var(--description-color);
+    font-size: 14px;
+}
+
+/* Details Panel */
+.details-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.details-header h3 {
+    font-size: var(--text-body-2);
+    color: var(--primary-color);
+    margin: 0;
+}
+
+.edit-toggle-btn {
+    background: none;
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--font-sans);
+    font-size: var(--text-small-1);
+    color: var(--primary-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.edit-toggle-btn:hover {
+    border-color: var(--primary-color);
+    background-color: var(--background-color);
+}
+
+.info-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.info-group label {
+    font-size: var(--text-small-1);
+    color: var(--description-color);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.info-group input {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-color);
+    font-family: var(--font-sans);
+    font-size: var(--text-body-4);
+    color: var(--primary-color);
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.info-group input:not(:disabled) {
+    background-color: var(--card-color);
+    border-color: var(--primary-color);
+}
+
+.save-btn {
+    margin-top: 20px;
+    background-color: var(--primary-color);
+    color: var(--card-color);
+    border: none;
+    border-radius: 30px;
+    padding: 12px 24px;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-4);
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: background-color 0.2s ease;
+}
+
+.save-btn:hover {
+    background-color: var(--hover-color);
+}
