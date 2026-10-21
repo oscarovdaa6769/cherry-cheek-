@@ -2,10 +2,10 @@ import Sidebar from "../components/admin/Sidebar";
 import "./AdminLayout.css"
 import { Outlet } from "react-router-dom"
 
-function AdminLayout() {
+function AdminLayout({ handleLogout }) {
     return (
         <div className="admin-layout">
-            <Sidebar />
+            <Sidebar onLogout={handleLogout} />
 
             <main className="admin-main">
 

@@ -15,6 +15,9 @@ import "./App.css"
 function App() {
 
     const [user, setUser] = useState(null);
+    const handleLogout = () => {
+        setUser(null);
+    };
     return (
         <Routes>
             {/* Normal User */}
@@ -40,7 +43,7 @@ function App() {
                 }
             >
             <Route element={<ProtectedRoute user={user} allowedRole="admin" />}>
-                <Route element={<AdminLayout/>}>
+                <Route element={<AdminLayout handleLogout={handleLogout}/>}>
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     {/* <Route path="/admin/orders" element={<Orders />} />
                     <Route path="/admin/customers" element={<Customers />} />

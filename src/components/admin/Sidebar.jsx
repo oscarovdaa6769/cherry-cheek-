@@ -3,7 +3,7 @@ import logoImage from '../../assets/images/logo2.png';
 import miniLogoImage from '../../assets/images/mini-logo2.png'; // 1. Import mini logo
 import { NavLink } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ onLogout }) {
     const menuItems = [
         { icon: "solar:home-2-bold", label: "Dashboard", href: "/admin/dashboard"},
         { icon: "solar:cart-3-bold", label: "Orders", href: "/admin/orders"},
@@ -33,6 +33,14 @@ function Sidebar() {
                     </NavLink>
                 ))}
             </nav>
+            <div className="sidebar-footer">
+                <button type="button" className="sidebar-link logout-btn" onClick={onLogout}>
+                    <span className="sidebar-icon">
+                        <Icon icon="solar:logout-3-bold" />
+                    </span>
+                    <span className="sidebar-label">Logout</span>
+                </button>
+            </div>
         </aside>
     );
 }
