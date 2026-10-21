@@ -1,13 +1,14 @@
-
-import Footer from './Footer';
-import Dashboard from'./Dashboard';
+import Header from "./components/layout/Header"
+import Hero from "./components/layout/Hero"
+import Footer from "./components/layout/Footer"
 
 function App() {
   return (
-    <>
-      <Dashboard/>
-      <Footer/>
-    </>
+    <div className="container">
+      <Header />
+      <Hero />
+      <Footer />
+    </div>
   );
 }
 
