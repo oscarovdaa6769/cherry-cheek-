@@ -1,11 +1,12 @@
 
 import Footer from './Footer';
-
+import Dashboard from'./Dashboard';
 
 function App() {
   return (
     <>
-      <Footer />
+      <Dashboard/>
+      <Footer/>
     </>
   );
 }
