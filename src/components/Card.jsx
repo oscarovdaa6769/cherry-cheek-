@@ -11,9 +11,7 @@ function Card({
   return (
     <div className="card">
       <div className="card-image">
-        <img src="https://www.personalcarecouncil.org/wp-content/smush-webp/2025/03/AdobeStock_218950992-square-crop.jpeg.webp" alt={title} />
-
-      
+        <img src={image} alt={title} />
 
         {outOfStock && <span className="card-badge">Out Stock</span>}
       </div>
@@ -29,8 +27,8 @@ function Card({
         </div>
 
         <div className="card-footer">
-          <span className="card-price">${price.toFixed(2)}</span>
-          <button className="card-add" aria-label="Add to cart">
+          <span className="card-price">${Number(price || 0).toFixed(2)}</span>
+          <button className="card-add" type="button" aria-label="Add to cart">
             +
           </button>
         </div>
