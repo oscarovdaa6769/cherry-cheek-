@@ -1,0 +1,262 @@
+@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins&display=swap');
+
+:root {
+    /* color */
+    --primary-color: #1D4533;
+    --secondary-color: #F7EAE0;
+    --footer-color: #5E3122;
+    --description-color: #6B7280;
+    --card-color: #FFFFFF;
+    --cta-color: #F9D2BA;
+    --background-color: #FAFAFA;
+    --border-color: #E5E5E5;
+    --hover-color: #183829;
+    /* Heading */
+    --text-header-1: 48px;
+    --text-header-2: 44px;
+    --text-header-3: 40px;
+    --text-header-4: 36px;
+    --text-header-5: 32px;
+    --text-header-6: 28px;
+
+    /* Body */
+    --text-body-1: 24px;
+    --text-body-2: 20px;
+    --text-body-3: 16px;
+    --text-body-4: 14px;
+
+    /* Small text */
+    --text-small-1: 12px;
+    --text-small-2: 10px;
+    --text-small-3: 8px;
+
+    /* font family */
+    --font-sans: "Poppins", sans-serif;
+    --font-heading: "Abril Fatface", serif;
+}
+/* Typography styles */
+h1 {
+  font-size: var(--text-header-1);
+}
+
+h2 {
+  font-size: var(--text-header-2);
+}
+
+h3 {
+  font-size: var(--text-header-3);
+}
+
+h4 {
+  font-size: var(--text-header-4);
+}
+
+h5 {
+  font-size: var(--text-header-5);
+}
+
+h6 {
+  font-size: var(--text-header-6);
+}
+
+.body-1 {
+  font-size: var(--text-body-1);
+}
+
+.body-2 {
+  font-size: var(--text-body-2);
+}
+
+.body-3 {
+  font-size: var(--text-body-3);
+}
+
+.body-4 {
+  font-size: var(--text-body-4);
+}
+
+.small-1 {
+  font-size: var(--text-small-1);
+}
+
+.small-2 {
+  font-size: var(--text-small-2);
+}
+
+.small-3 {
+  font-size: var(--text-small-3);
+}
+
+.container {
+    font-family: var(--font-sans);
+}
+
+/* Header */
+header {
+    background: var(--primary-color);
+    padding: 8px 0;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+ul {
+    display: flex;
+    list-style: none;
+    gap: 20px;
+}
+
+.nav-btn {
+    text-decoration: none;
+    color: var(--secondary-color);
+}
+
+.nav-btn:hover {
+    border-bottom: 1px solid var(--secondary-color);
+}
+
+.mini-icon {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mini-icon a {
+    color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+    border-radius: 50%;
+    padding: 8px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.2s ease;
+}
+
+.mini-icon a:hover {
+  background-color: var(--hover-color);
+  border: 1px solid var(--hover-color);
+}
+
+/* Home */
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 140px 4.3%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 390px;
+  margin-left: 1%;
+  color: var(--card-color);
+}
+
+.hero-label {
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.hero-heading {
+  text-transform: uppercase;
+}
+
+.hero-description {
+  font-style: italic;
+}
+
+.hero h1 {
+  margin: 0 0 8px;
+  font-size: var(--text-header-6);
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.hero-description {
+  max-width: 330px;
+  margin: 0 0 16px;
+  font-size: var(--text-body-4);
+  line-height: 1.4;
+}
+
+.hero-button {
+  display: inline-block;
+  padding: 10px 32px;
+  border-radius: 30px;
+  background-color: var(--primary-color);
+  color: var(--card-color);
+  font-size: var(--text-body-4);
+  font-style: italic;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.hero-button:hover {
+  background-color: var(--footer-color);
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 430px;
+    padding: 35px 6%;
+    background-position: center;
+  }
+
+  .hero-content {
+    max-width: 320px;
+    margin-left: 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Button */
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  align-self: flex-start;
+  padding: 12px 24px;
+
+  background-color: var(--primary-color);
+  color: var(--card-color);
+
+  border: none;
+  border-radius: 8px;
+
+  font: inherit;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.btn:hover {
+  background-color: var(--hover-color);
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 3px;
+}
