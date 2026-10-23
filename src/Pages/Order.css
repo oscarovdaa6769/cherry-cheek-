@@ -335,11 +335,15 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
-  margin: 22px 0 0;
+  margin: 25px 0;
 }
 
 .continue-button,
 .back-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   min-height: 45px;
   padding: 0 23px;
   border: 0;
@@ -364,6 +368,11 @@
 .continue-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.back-button {
+  background: transparent;
+  color: var(--green);
 }
 
 .back-button {
