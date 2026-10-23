@@ -35,6 +35,27 @@ export default function ProductDetail() {
     const [selectedSize, setSelectedSize] = useState('50ml');
     const [quantity, setQuantity] = useState(1);
     const product = ProductDatas[0];
+    const [showToast, setShowToast] = useState(false);
+    const [isWishlisted, setIsWishlisted] = useState(false);
+    const [toastMessage, setToastMessage] = useState('');
+
+    const handleWishlist = () => {
+        setShowToast(true);
+
+        setTimeout(() => {
+            setShowToast(false)
+        }, 3000);
+
+        const nextWishlistState = !isWishlisted;
+        setIsWishlisted(nextWishlistState);
+
+        if (nextWishlistState) {
+            setToastMessage('Added to your wishlist')
+        } else {
+            setToastMessage('Remove from your wishlist')
+        }
+    }
+
     return (
         <main>
             <div className="product-detail-header">
@@ -98,9 +119,17 @@ export default function ProductDetail() {
                                 ADD TO CART
                             </button>
 
-                            <button type="button" className="wishlist-btn" aria-label="Save to wishlist">
-                                <Icon icon="solar:heart-linear" />
+                            <button type="button" className={`wishlist-btn ${isWishlisted ? 'active' : ''}`} aria-label="Save to wishlist" onClick={handleWishlist}>
+                                <Icon icon={isWishlisted ? "solar:heart-bold" : "solar:heart-linear"} />
                             </button>
+                            {showToast && (
+                                <div className={`wishlist-toast ${isWishlisted ? 'added' : 'removed'}`}>
+                                    <Icon 
+                                        icon={isWishlisted ? "solar:check-circle-bold" : "solar:minus-circle-bold"} 
+                                    />
+                                    <span>{toastMessage}</span>
+                                </div>
+                            )}
                         </div>
 
                         <div className="product-features-grid">

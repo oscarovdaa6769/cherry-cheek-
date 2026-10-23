@@ -31,7 +31,29 @@
 
     /* font family */
     --font-sans: "Poppins", sans-serif;
+
+    /* Status colors */
+    --success-color: #16A34A;
+    --hover-success-color: #15803D;
+
+    --warning-color: #F59E0B;
+    --hover-warning-color: #D97706;
+
+    --error-color: #DC2626;
+    --hover-error-color: #B91C1C;
 }
+
+[data-theme="dark"] {
+    --background-color: #0d0f12;
+    --card-color: #16181d;
+    --primary-color: #e2e8f0;
+    --secondary-color: #1f232b;
+    --description-color: #9ca3af;
+    --border-color: #272c36;
+    --hover-color: #2a2f3a;
+    --footer-color: #16181d;
+}
+
 /* Typography styles */
 h1 {
   font-size: var(--text-header-1);
@@ -106,9 +128,12 @@ header nav {
 }
 
 body {
-  padding-top: 80px;
   font-family: var(--font-sans);
   background-color: var(--background-color);
+}
+
+.user-container {
+  padding-top: 80px;
 }
 
 nav {
@@ -164,22 +189,4 @@ ul {
 .mini-icon a:hover {
   background-color: var(--hover-color);
   border: 1px solid var(--hover-color);
-}
-
-.btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  align-self: flex-start;
-  padding: 12px 24px;
-  background-color: var(--primary-color);
-  color: var(--card-color);
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  cursor: pointer;
-  font-size: var(--text-body-3);
-}
-
-.btn:hover {
-  background-color: var(--hover-color);
 }

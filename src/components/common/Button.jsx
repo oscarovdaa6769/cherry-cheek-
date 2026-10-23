@@ -1,4 +1,5 @@
 import "../../App.css";
+import './Button.css'
 import { useNavigate } from "react-router-dom";
 
 function Button({name}) {

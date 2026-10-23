@@ -1,8 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from "@iconify/react";
 import Button from '../../components/common/Button'; // Uses your existing Button component
 import './Wishlist.css';
 import '../../App.css'
+import ProdImg1 from '../../assets/images/product1.jpg'
+import ProdImg2 from '../../assets/images/product2.jpg'
+import ProdImg3 from '../../assets/images/product3.jpg'
+import ProdImg4 from '../../assets/images/product4.jpg'
 
 // Sample saved wishlist items
 const initialWishlist = [
@@ -12,7 +17,7 @@ const initialWishlist = [
         category: "SKINCARE & HYDRATION",
         price: "$18.00",
         oldPrice: "$20.00",
-        img: "/assets/images/product-detail-1.jpg",
+        img: ProdImg1,
         inStock: true
     },
     {
@@ -21,13 +26,32 @@ const initialWishlist = [
         category: "BODY CARE",
         price: "$24.00",
         oldPrice: "",
-        img: "/assets/images/product-detail-2.jpg",
+        img: ProdImg2,
         inStock: true
-    }
+    },
+    {
+        id: 3,
+        name: "Hydrating Facial Cleanser",
+        category: "SKIN CARE",
+        price: "$18.00",
+        oldPrice: "$22.00",
+        img: ProdImg3,
+        inStock: true
+    },
+    {
+        id: 4,
+        name: "Vitamin C Brightening Serum",
+        category: "SKIN CARE",
+        price: "$32.00",
+        oldPrice: "",
+        img: ProdImg4,
+        inStock: true
+    },
 ];
 
 export default function Wishlist() {
     const [wishlist, setWishlist] = useState(initialWishlist);
+    const navigate = useNavigate();
 
     const removeItem = (id) => {
         setWishlist(wishlist.filter(item => item.id !== id));
@@ -51,15 +75,7 @@ export default function Wishlist() {
                     <div className="wishlist-grid">
                         {wishlist.map((item) => (
                             <div key={item.id} className="wishlist-card">
-                                <button 
-                                    className="remove-btn" 
-                                    onClick={() => removeItem(item.id)}
-                                    aria-label="Remove item"
-                                >
-                                    <Icon icon="solar:close-circle-bold" />
-                                </button>
-                                
-                                <div className="wishlist-img-box">
+                                <div className="wishlist-img-box" onClick={() => navigate('/product-detail')}>
                                     <img src={item.img} alt={item.name} />
                                 </div>
 
@@ -73,8 +89,16 @@ export default function Wishlist() {
                                             <span className="wishlist-old-price">{item.oldPrice}</span>
                                         )}
                                     </div>
-
-                                    <Button name="Add to cart" />
+                                    <div className="button-container">
+                                        <Button name="Add to cart" />
+                                        <button 
+                                            className="remove-btn" 
+                                            onClick={() => removeItem(item.id)}
+                                            aria-label="Remove item"
+                                        >
+                                            <Icon icon="at-icons:trash-can" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         ))}

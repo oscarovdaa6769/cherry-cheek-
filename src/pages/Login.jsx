@@ -1,8 +1,7 @@
-
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import "./Login.css";
-import "../App.css"
+import "../App.css";
 
 export default function Login({ onLogin }) {
   const [email, setEmail] = useState("");
@@ -16,31 +15,37 @@ export default function Login({ onLogin }) {
     setError("");
 
     const normalizedEmail = email.trim().toLowerCase();
-
     let loggedInUser = null;
 
-    // Demo admin account
-    if (
-      normalizedEmail === "admin@cherrycheek.com" &&
-      password === "admin123"
-    ) {
+    // 1. Demo admin account
+    if (normalizedEmail === "admin@cherrycheek.com" && password === "admin123") {
       loggedInUser = {
         name: "Admin",
         email: normalizedEmail,
         role: "admin",
       };
     }
-
-    // Demo customer account
-    else if (
-      normalizedEmail === "user@cherrycheek.com" &&
-      password === "user123"
-    ) {
+    // 2. Demo customer account
+    else if (normalizedEmail === "user@cherrycheek.com" && password === "user123") {
       loggedInUser = {
         name: "Customer",
         email: normalizedEmail,
         role: "user",
       };
+    }
+    // 3. Check locally registered users
+    else {
+      const registeredUsers = JSON.parse(localStorage.getItem("registered_users")) || [];
+      const foundUser = registeredUsers.find(
+        (u) => u.email === normalizedEmail && u.password === password
+      );
+      if (foundUser) {
+        loggedInUser = {
+          name: foundUser.name,
+          email: foundUser.email,
+          role: "user",
+        };
+      }
     }
 
     if (!loggedInUser) {
@@ -48,14 +53,15 @@ export default function Login({ onLogin }) {
       return;
     }
 
-    // Update authentication state in App.jsx
+    // Save active session to localStorage
+    localStorage.setItem("current_user", JSON.stringify(loggedInUser));
     onLogin(loggedInUser);
 
-    // Redirect according to role
+    // Redirect based on role
     if (loggedInUser.role === "admin") {
       navigate("/admin/dashboard", { replace: true });
     } else {
-      navigate("/", { replace: true });
+      navigate("/profile", { replace: true });
     }
   }
 
@@ -101,10 +107,14 @@ export default function Login({ onLogin }) {
           Login
         </button>
 
-        <p className="guest-message">
-          Just browsing?{" "}
-          <a href="/">Continue as a guest</a>
-        </p>
+        <div className="guest-message" style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginTop: "1rem", textAlign: "center" }}>
+          <p style={{ margin: 0 }}>
+            Don't have an account? <Link to="/register">Sign up</Link>
+          </p>
+          <p style={{ margin: 0 }}>
+            Just browsing? <Link to="/">Continue as a guest</Link>
+          </p>
+        </div>
       </form>
     </div>
   );

@@ -1,12 +1,25 @@
 import "../../App.css";
 import { Icon } from "@iconify/react";
+import logoLight from '../../assets/images/logo.png'
+import logoDark from '../../assets/images/logo2.png'
+import { useEffect, useState } from "react";
 
 function Header() {
+    const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
+
+    useEffect(() => {
+        const updateTheme = () => {
+            setTheme(localStorage.getItem('app-theme') || 'light');
+        };
+
+        window.addEventListener('themeChanged', updateTheme);
+        return () => window.removeEventListener('themeChanged', updateTheme);
+    }, []);
     return (
         <header>
             <nav>
                 <a href="/">
-                    <img src="src/assets/images/logo.png" alt="Cherry Cheek" />
+                    <img src={theme === 'dark' ? logoDark : logoLight} alt="Cherry Cheek" />
                 </a>
                 <ul>
                     <li><a className="nav-btn" href="/">Home</a></li>
