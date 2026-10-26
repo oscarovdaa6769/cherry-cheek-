@@ -2,6 +2,8 @@ import { Icon } from "@iconify/react";
 import { useState } from "react";
 import "./App.css";
 
+const PER_PAGE = 6;
+
 const initialCustomers = Array.from({ length: 10 }, (_, index) => ({
   id: index + 1,
   name: "Veasna Sithul",
@@ -10,18 +12,27 @@ const initialCustomers = Array.from({ length: 10 }, (_, index) => ({
   status: "Active",
 }));
 
-function Customer() {
-  const [customers, setCustomers] = useState(initialCustomers);
-  const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All Customers");
-  const [page, setPage] = useState(1);
+// Icon names come from the Solar set: https://icon-sets.iconify.design/solar/
+const ICONS = {
+  total: "solar:users-group-rounded-bold",
+  active: "solar:user-check-rounded-bold",
+  newCustomer: "solar:user-plus-rounded-bold",
+  inactive: "solar:user-block-rounded-bold",
+  trend: "solar:arrow-right-up-linear",
+  search: "solar:magnifer-linear",
+  add: "solar:add-circle-linear",
+  edit: "solar:pen-2-bold",
+  remove: "solar:trash-bin-2-bold",
+};
 
-  const perPage = 6;
+// One place for the search + category rule (used by the table and after deleting)
+function filterCustomers(customers, search, category) {
+  const text = search.toLowerCase();
 
-  const filteredCustomers = customers.filter((customer) => {
+  return customers.filter((customer) => {
     const matchesSearch =
-      customer.name.toLowerCase().includes(search.toLowerCase()) ||
-      customer.email.toLowerCase().includes(search.toLowerCase()) ||
+      customer.name.toLowerCase().includes(text) ||
+      customer.email.toLowerCase().includes(text) ||
       customer.phone.includes(search);
 
     const matchesCategory =
@@ -29,15 +40,42 @@ function Customer() {
 
     return matchesSearch && matchesCategory;
   });
+}
+
+function StatCard({ title, icon, value, note }) {
+  return (
+    <div className="stat-card">
+      <div className="stat-top">
+        <span>{title}</span>
+        <span className="stat-icon">
+          <Icon icon={icon} width="16" height="16" />
+        </span>
+      </div>
+      <h2>{value}</h2>
+      <p>
+        <Icon icon={ICONS.trend} width="14" height="14" />
+        {note}
+      </p>
+    </div>
+  );
+}
+
+function Customer() {
+  const [customers, setCustomers] = useState(initialCustomers);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All Customers");
+  const [page, setPage] = useState(1);
+
+  const filteredCustomers = filterCustomers(customers, search, category);
 
   const totalPages = Math.max(
     1,
-    Math.ceil(filteredCustomers.length / perPage)
+    Math.ceil(filteredCustomers.length / PER_PAGE)
   );
 
   const currentCustomers = filteredCustomers.slice(
-    (page - 1) * perPage,
-    page * perPage
+    (page - 1) * PER_PAGE,
+    page * PER_PAGE
   );
 
   function addCustomer() {
@@ -88,81 +126,38 @@ function Customer() {
     const updated = customers.filter((customer) => customer.id !== id);
     setCustomers(updated);
 
-    const remaining = updated.filter((customer) => {
-      const matchesSearch =
-        customer.name.toLowerCase().includes(search.toLowerCase()) ||
-        customer.email.toLowerCase().includes(search.toLowerCase()) ||
-        customer.phone.includes(search);
-
-      return (
-        matchesSearch &&
-        (category === "All Customers" || customer.status === category)
-      );
-    });
-
-    setPage(Math.min(page, Math.max(1, Math.ceil(remaining.length / perPage))));
+    const remaining = filterCustomers(updated, search, category);
+    setPage(Math.min(page, Math.max(1, Math.ceil(remaining.length / PER_PAGE))));
   }
 
   return (
     <div className="customer-page">
-      <header className="customer-header">
-        <div className="top-search">
-          <span className="search-icon">⌕</span>
-          <input
-            placeholder="Search Here"
-            value={search}
-            onChange={(event) => {
-              setSearch(event.target.value);
-              setPage(1);
-            }}
-          />
-        </div>
-
-        <div className="header-icons">
-          <button aria-label="Settings">⚙</button>
-          <button aria-label="Messages">✉</button>
-          <button aria-label="Notifications">♟</button>
-          <div className="profile-avatar">C</div>
-        </div>
-      </header>
-
       <main className="customer-content">
         <section className="customer-stats">
-          <div className="stat-card">
-            <div className="stat-top">
-              <span>Total Customers</span>
-              <span className="stat-icon">♧</span>
-            </div>
-            <h2>{customers.length}</h2>
-            <p>↗ + 10 This Week</p>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-top">
-              <span>Active Customers</span>
-              <span className="stat-icon">♧</span>
-            </div>
-            <h2>{customers.filter((c) => c.status === "Active").length}</h2>
-            <p>↗ Active accounts</p>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-top">
-              <span>New Customers</span>
-              <span className="stat-icon">♧</span>
-            </div>
-            <h2>{customers.filter((c) => c.id > 10).length}</h2>
-            <p>↗ Added this session</p>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-top">
-              <span>Inactive Customers</span>
-              <span className="stat-icon">♧</span>
-            </div>
-            <h2>{customers.filter((c) => c.status === "Inactive").length}</h2>
-            <p>↗ Inactive accounts</p>
-          </div>
+          <StatCard
+            title="Total Customers"
+            icon={ICONS.total}
+            value={customers.length}
+            note="+ 10 This Week"
+          />
+          <StatCard
+            title="Active Customers"
+            icon={ICONS.active}
+            value={customers.filter((c) => c.status === "Active").length}
+            note="Active accounts"
+          />
+          <StatCard
+            title="New Customers"
+            icon={ICONS.newCustomer}
+            value={customers.filter((c) => c.id > 10).length}
+            note="Added this session"
+          />
+          <StatCard
+            title="Inactive Customers"
+            icon={ICONS.inactive}
+            value={customers.filter((c) => c.status === "Inactive").length}
+            note="Inactive accounts"
+          />
         </section>
 
         <section className="customer-toolbar">
@@ -180,9 +175,10 @@ function Customer() {
           </select>
 
           <div className="table-search">
-            <span className="search-icon">⌕</span>
+            <Icon icon={ICONS.search} className="search-icon" />
             <input
               placeholder="Search Here"
+              aria-label="Search customers"
               value={search}
               onChange={(event) => {
                 setSearch(event.target.value);
@@ -192,7 +188,8 @@ function Customer() {
           </div>
 
           <button className="new-customer-btn" onClick={addCustomer}>
-            <span>⊕</span> New Customer
+            <Icon icon={ICONS.add} width="22" height="22" />
+            New Customer
           </button>
         </section>
 
@@ -239,7 +236,7 @@ function Customer() {
                         aria-label="Edit customer"
                         title="Edit"
                       >
-                        <Icon icon="solar:pen-2-bold"/>
+                        <Icon icon={ICONS.edit} />
                       </button>
                       <button
                         className="delete-btn"
@@ -247,7 +244,7 @@ function Customer() {
                         aria-label="Delete customer"
                         title="Delete"
                       >
-                        <Icon icon="solar:trash-bin-2-bold"/>
+                        <Icon icon={ICONS.remove} />
                       </button>
                     </div>
                   </td>
@@ -272,7 +269,9 @@ function Customer() {
               previous
             </button>
 
-            <span>{page} of {totalPages}</span>
+            <span>
+              {page} of {totalPages}
+            </span>
 
             <button
               disabled={page === totalPages}
@@ -287,4 +286,4 @@ function Customer() {
   );
 }
 
-export default Customer;
+export default Customer;  

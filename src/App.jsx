@@ -2,6 +2,8 @@ import Header from "./components/layout/Header"
 import Hero from "./components/layout/Hero"
 import Footer from "./components/layout/Footer"
 import Customer from "./Customer"
+import Home from "./Home";
+import About from "./About";
 
 function App() {
   return (
@@ -10,6 +12,8 @@ function App() {
       <Hero />
       <Footer />
         <Customer />
+        <Home />
+        <About />
     </div>
   );
 }
