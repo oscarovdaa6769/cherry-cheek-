@@ -23,7 +23,7 @@ function Header() {
                 </a>
                 <ul>
                     <li><a className="nav-btn" href="/">Home</a></li>
-                    <li><a className="nav-btn" href="/product">Product</a></li>
+                    <li><a className="nav-btn" href="/products">Product</a></li>
                     <li><a className="nav-btn" href="/about">About</a></li>
                     <li><a className="nav-btn" href="/contact">Contact</a></li>
                 </ul>
