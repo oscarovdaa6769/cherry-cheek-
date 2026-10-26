@@ -163,3 +163,69 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ---------- Pagination ---------- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  padding: 30px var(--side-space) 60px;
+  width: 100%;
+}
+
+.page-number,
+.page-arrow {
+  width: 52px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: #fff;
+  color: var(--green);
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.page-number:hover,
+.page-arrow:hover:not(:disabled) {
+  border-color: var(--green);
+}
+
+.page-number.active {
+  background: var(--green);
+  color: #fff;
+  border-color: var(--green);
+}
+
+.page-arrow svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.page-arrow:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+@media (max-width: 800px) {
+  .pagination {
+    gap: 8px;
+    padding: 25px 20px 40px;
+  }
+
+  .page-number,
+  .page-arrow {
+    width: 42px;
+    height: 42px;
+  }
+}
