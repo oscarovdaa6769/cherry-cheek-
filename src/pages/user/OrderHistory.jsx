@@ -3,51 +3,7 @@ import { Icon } from "@iconify/react";
 import Button from '../../components/common/Button';
 import './OrderHistory.css';
 import '../../App.css'
-import ProdImg1 from '../../assets/images/product1.jpg'
-import ProdImg2 from '../../assets/images/product2.jpg'
-import ProdImg3 from '../../assets/images/product3.jpg'
 import { useNavigate } from 'react-router-dom';
-
-// Sample order history data
-const initialOrders = [
-    {
-        id: "ORD-98231",
-        date: "Oct 18, 2026",
-        status: "Delivered",
-        total: "$38.00",
-        items: [
-            {
-                name: "Botanical Radiance Facial Serum",
-                size: "50ml",
-                price: "$18.00",
-                qty: 1,
-                img: ProdImg1,
-            },
-            {
-                name: "Gentle Cleansing Body Wash",
-                size: "100ml",
-                price: "$20.00",
-                qty: 1,
-                img: ProdImg3,
-            }
-        ]
-    },
-    {
-        id: "ORD-87102",
-        date: "Sep 04, 2026",
-        status: "Processing",
-        total: "$99.99",
-        items: [
-            {
-                name: "Tiki Tiki Body Lotion",
-                size: "100ml",
-                price: "$99.99",
-                qty: 1,
-                img: ProdImg2,
-            }
-        ]
-    }
-];
 
 export default function OrderHistory({ setCart}) {
     const [orders] = useState(initialOrders);

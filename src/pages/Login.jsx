@@ -112,7 +112,7 @@ export default function Login({ onLogin }) {
             Don't have an account? <Link to="/register">Sign up</Link>
           </p>
           <p style={{ margin: 0 }}>
-            Just browsing? <Link to="/">Continue as a guest</Link>
+            Just browsing? <Link to="/" onClick={() => localStorage.removeItem('current_user')}>Continue as a guest</Link>
           </p>
         </div>
       </form>

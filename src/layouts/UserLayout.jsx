@@ -1,12 +1,12 @@
 import Header from "../components/layout/Header"
 import { Outlet, Link } from "react-router-dom"
 
-function UserLayout() {
+function UserLayout({ handleLogout }) {
     return (
         <div className="user-container">
-            <Header />
+            <Header handleLogout={handleLogout} />
             <main className="">
-                <Outlet />
+                <Outlet context={{ handleLogout }}/>
             </main>
         </div>
     )

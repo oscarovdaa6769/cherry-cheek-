@@ -22,7 +22,7 @@ export default function Profile() {
         e.preventDefault();
         localStorage.removeItem('current_user');
         setUser(null);
-        navigate('/');
+        navigate('/profile');
     };
 
     const handleSaveChanges = () => {

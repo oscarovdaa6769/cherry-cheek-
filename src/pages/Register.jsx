@@ -30,9 +30,10 @@ export default function Register() {
     const newUser = { name, email: normalizedEmail, password, role: "user" };
     existingUsers.push(newUser);
     localStorage.setItem("registered_users", JSON.stringify(existingUsers));
+    localStorage.setItem('current_user', JSON.stringify(newUser));
 
     // Automatically log them in or redirect to login
-    navigate("/login");
+    navigate("/profile");
   }
 
   return (

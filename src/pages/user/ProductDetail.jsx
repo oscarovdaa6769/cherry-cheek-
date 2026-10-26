@@ -2,58 +2,54 @@ import "../../App.css"
 import { Icon } from "@iconify/react"
 import Btn from "../../components/common/Button"
 import Review from "../../components/common/Review"
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import "./ProductDetail.css"
-import productImgFile from "../../assets/images/product-detail-1.jpg"
-
-const ProductDatas = [
-    {
-        id: 1,
-        prodImg: productImgFile,
-        prodCate: "SKINCARE & HYDRATION",
-        prodName: "Botanical Radiance Facial Serum",
-        prodRev: {
-            rating: 4,
-            count: 214
-        },
-        prodPrice: "$18.00",
-        prodOldPrice: "$20.00",
-        prodDiscount: "20%",
-        prodDesc: "A lightweight, deeply hydrating facial serum formulated with organic botanical extracts to restore your skin's natural glow, lock in essential moisture, and smooth out fine lines for a radiant, youthful complexion.",
-        sizes: ["50ml", "100ml"],
-        features: [
-            { icon: "solar:dropper-bold", label: "Pure Botanical Extract" },
-            { icon: "solar:leaf-bold", label: "100% Organic Formula" },
-            { icon: "solar:health-bold", label: "Dermatologist Approved" },
-            { icon: "solar:shield-check-bold", label: "Eco-Friendly Packaging" }
-        ],
-        details: "Formulated with clean, sustainably sourced ingredients. Free from parabens, sulfates, and synthetic fragrances. Suitable for all skin types, including sensitive skin. Apply 3-4 drops morning and evening onto cleansed skin before moisturizing."
-    }
-];
+import productsData from '../../data/products.json'
+import { useParams } from "react-router-dom";
 
 export default function ProductDetail() {
+    const { id } = useParams();
+    const product = productsData.find((p) => p.id === Number(id)) || productsData[0];
+
     const [selectedSize, setSelectedSize] = useState('50ml');
     const [quantity, setQuantity] = useState(1);
-    const product = ProductDatas[0];
     const [showToast, setShowToast] = useState(false);
-    const [isWishlisted, setIsWishlisted] = useState(false);
+    
+    // Check localStorage on load/route change to see if this product is already wishlisted
+    const [isWishlisted, setIsWishlisted] = useState(() => {
+        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        return savedWishlist.includes(product.id);
+    });
     const [toastMessage, setToastMessage] = useState('');
+
+    // Keep wishlist state synced if the product ID changes via route params
+    useEffect(() => {
+        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        setIsWishlisted(savedWishlist.includes(product.id));
+    }, [product.id]);
 
     const handleWishlist = () => {
         setShowToast(true);
 
         setTimeout(() => {
-            setShowToast(false)
+            setShowToast(false);
         }, 3000);
 
+        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         const nextWishlistState = !isWishlisted;
         setIsWishlisted(nextWishlistState);
 
+        let updatedWishlist;
         if (nextWishlistState) {
-            setToastMessage('Added to your wishlist')
+            updatedWishlist = [...savedWishlist, product.id];
+            setToastMessage('Added to your wishlist');
         } else {
-            setToastMessage('Remove from your wishlist')
+            updatedWishlist = savedWishlist.filter(itemId => itemId !== product.id);
+            setToastMessage('Removed from your wishlist');
         }
+
+        // Save changes to localStorage so Wishlist.jsx can read them
+        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
     }
 
     return (
@@ -66,7 +62,7 @@ export default function ProductDetail() {
             <section className="product-detail-section">
                 <div className="product-detail-left">
                     <div className="product-detail-img">
-                        <img src={product.prodImg} alt={product.prodName} />
+                        <img src={product.image} alt={product.prodName} />
                     </div>
                 </div>
                 <div className="product-detail-right">
@@ -133,7 +129,7 @@ export default function ProductDetail() {
                         </div>
 
                         <div className="product-features-grid">
-                            {product.features.map((feat, index) => (
+                            {(product.features || []).map((feat, index) => (
                                 <div key={index} className="feature-card">
                                     <Icon icon={feat.icon} />
                                     <span>{feat.label}</span>
@@ -146,7 +142,7 @@ export default function ProductDetail() {
                                 <span>Detail</span>
                                 <Icon icon="solar:minus-linear" />
                             </div>
-                            <p className="accordion-body">{product.details}</p>
+                            <p className="accordion-body">{product.details || product.prodDesc}</p>
                         </div>
                     </div>
                 </div>
