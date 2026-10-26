@@ -1,0 +1,240 @@
+.about-page {
+  position: relative;
+  width: 100%;
+  padding: 56px 0;
+  background: var(--background-color, #fafafa);
+  /* same page color all the way to the left and right edges */
+  box-shadow: 0 0 0 100vmax var(--background-color, #fafafa);
+  clip-path: inset(0 -100vmax);
+  color: var(--primary-color, #1d4533);
+  font-family: var(--font-sans);
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  box-sizing: border-box;
+}
+
+.about-page *,
+.about-page *::before,
+.about-page *::after {
+  box-sizing: border-box;
+}
+
+/* :where() has zero specificity, so the margins set by the classes below still win */
+.about-page :where(h1, h2, h3, p) {
+  margin: 0;
+}
+
+/* Round green icon */
+.about-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color, #1d4533);
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 1. Header */
+.about-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.about-header__title {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  font-size: var(--text-header-5, 32px);
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  color: var(--primary-color, #1d4533);
+}
+
+.about-header__text {
+  max-width: 340px;
+  font-size: var(--text-body-4, 14px);
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--primary-color, #1d4533);
+}
+
+/* 2. Photo */
+.about-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 570 / 244;
+  object-fit: cover;
+  background: var(--secondary-color, #f7eae0);
+}
+
+/* 3. Numbers */
+.about-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0 6px;
+}
+
+.about-stat__value {
+  font-size: var(--text-header-6, 28px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.2;
+  color: var(--primary-color, #1d4533);
+}
+
+.about-stat__label {
+  margin-top: 10px;
+  font-size: var(--text-small-1, 12px);
+  color: var(--description-color, #6b7280);
+}
+
+/* 4. Story, vision, mission */
+.about-story {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  padding: 0 6px;
+}
+
+.about-story__eyebrow {
+  font-size: var(--text-small-1, 12px);
+  font-style: italic;
+}
+
+.about-story__title {
+  margin-top: 8px;
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-body-2, 20px);
+  text-transform: uppercase;
+  color: var(--primary-color, #1d4533);
+}
+
+.about-story__text {
+  margin-top: 14px;
+  font-size: var(--text-body-4, 14px);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--description-color, #6b7280);
+}
+
+.about-story__right {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding-top: 8px;
+}
+
+.about-block__title {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-body-3, 16px);
+  text-transform: uppercase;
+  color: var(--primary-color, #1d4533);
+}
+
+.about-block__text {
+  margin-top: 10px;
+  font-size: var(--text-small-1, 12px);
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--description-color, #6b7280);
+}
+
+/* 5. Services */
+.about-services {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.about-services__eyebrow {
+  font-size: var(--text-small-1, 12px);
+  font-weight: 600;
+}
+
+.about-services__title {
+  margin-top: 4px;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-body-1, 24px);
+  color: var(--primary-color, #1d4533);
+}
+
+.about-services__subtitle {
+  margin-top: 4px;
+  font-size: var(--text-small-1, 12px);
+  font-style: italic;
+  color: var(--description-color, #6b7280);
+}
+
+.about-services__grid {
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 0 6px;
+}
+
+.about-service {
+  padding: 20px 14px 18px;
+  background: var(--card-color, #fff);
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.about-service__title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--text-body-4, 14px);
+  color: var(--primary-color, #1d4533);
+}
+
+.about-service__text {
+  font-size: var(--text-small-2, 10px);
+  font-style: italic;
+  line-height: 1.6;
+  color: var(--description-color, #6b7280);
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .about-stats,
+  .about-services__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .about-page {
+    padding: 32px 16px 64px;
+    gap: 32px;
+  }
+
+  .about-header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .about-header__text {
+    max-width: none;
+  }
+
+  .about-story {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-services__grid {
+    grid-template-columns: 1fr;
+  }
+}

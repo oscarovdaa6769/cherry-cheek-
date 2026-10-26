@@ -4,8 +4,8 @@ import AdminLayout from "./layouts/AdminLayout";
 import UserLayout from "./layouts/UserLayout"
 
 import AdminDashboard from "./pages/admin/Dashboard";
-import { Home } from "./pages/user/Home";
-import { Product } from "./pages/user/Product";
+import Home from "./pages/user/Home";
+import Product from "./pages/user/Products";
 import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile"
 import Login from "./pages/Login";
@@ -17,6 +17,8 @@ import OrderHistory from "./pages/user/OrderHistory";
 import Settings from "./pages/user/Setting";
 import Register from "./pages/Register";
 import AdminSettings from "./pages/admin/AdminSettings";
+import About from "./pages/user/About";
+import Contact from './pages/user/Contact'
 
 
 function App() {
@@ -61,6 +63,8 @@ function App() {
                 <Route index element={<Home />} />
                 <Route path="home" element={<Home />} />
                 <Route path="products" element={<Product />} />
+                <Route path="about" element={<About />} />
+                <Route path="contact" element={<Contact />} />
                 <Route path="product-detail" element={<ProductDetail />} />
                 <Route path="wishlist" element={<Wishlist user={user} />} />
                 <Route path="profile" element={<Profile user={user} />} />

@@ -1,0 +1,31 @@
+{
+  "teamImage": "src/assets/images/product-1.jpg", 
+  "stats": [
+    { "value": "1000+", "label": "Client helped globally" },
+    { "value": "200+", "label": "Licensed professionals" },
+    { "value": "95%", "label": "Client satisfaction rate" },
+    { "value": "15+", "label": "Years of experience" }
+  ],
+  "services": [
+    {
+      "icon": "solar:bag-linear",
+      "title": "Cosmetic product",
+      "text": "Discover high-quality makeup and beauty products for your everyday look and special occasions."
+    },
+    {
+      "icon": "solar:leaf-linear",
+      "title": "Skin Care",
+      "text": "Find skincare products such as cleansers, moisturizers, serums, and other beauty essentials."
+    },
+    {
+      "icon": "solar:delivery-linear",
+      "title": "Fast Delivery",
+      "text": "We deliver your orders safely and conveniently to your doorstep."
+    },
+    {
+      "icon": "solar:headphones-round-linear",
+      "title": "Customer Support",
+      "text": "Our friendly team is ready to help you choose the right products and answer your questions."
+    }
+  ]
+}
