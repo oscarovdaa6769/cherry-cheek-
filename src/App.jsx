@@ -1,17 +1,3 @@
-<<<<<<< HEAD
-import Header from "./components/layout/Header"
-import Hero from "./components/layout/Hero"
-import Footer from "./components/layout/Footer"
-
-function App() {
-  return (
-    <div className="container">
-      <Header />
-      <Hero />
-      <Footer />
-    </div>
-  );
-=======
 import { Routes, Route } from "react-router-dom";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminLayout from "./layouts/AdminLayout";
@@ -103,7 +89,6 @@ function App() {
             <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
     );
->>>>>>> 1196073175592109a13f7e0bb8b6f7704645dc99
 }
 
 export default App;
