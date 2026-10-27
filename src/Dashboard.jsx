@@ -143,44 +143,7 @@ export default function App() {
 
   return (
     <main className="dashboard">
-      {/* TOP NAVBAR ONLY — NO SIDEBAR */}
-      <header className="topbar">
-        <div className="topbar-search">
-          <Search size={22} />
-          <input
-            value={search}
-            onChange={(event) => updateSearch(event.target.value)}
-            placeholder="Search Here"
-            aria-label="Search products"
-          />
-          {search && (
-            <button
-              className="clear-search"
-              onClick={() => updateSearch("")}
-              aria-label="Clear search"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        <div className="topbar-actions">
-          <button className="icon-button" aria-label="Settings">
-            <Settings size={18} />
-          </button>
-          <button className="icon-button" aria-label="Messages">
-            <Mail size={18} />
-          </button>
-          <button className="icon-button" aria-label="Notifications">
-            <Bell size={18} />
-          </button>
-          <img
-            className="avatar"
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces"
-            alt="Admin profile"
-          />
-        </div>
-      </header>
+     
 
       {/* DASHBOARD CONTENT */}
       <section className="content">
