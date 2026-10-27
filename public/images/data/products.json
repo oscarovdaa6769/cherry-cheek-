@@ -1,0 +1,22 @@
+[
+  {
+    "id": 101,
+    "categoryId": 1,
+    "sku": "SK-101",
+    "name": "Gentle Face Cleanser",
+    "brand": "Cherry Cheeks",
+    "price": 12.00,
+    "stockQuantity": 24,
+    "active": true
+  },
+  {
+    "id": 102,
+    "categoryId": 1,
+    "sku": "SK-102",
+    "name": "Vitamin C Serum",
+    "brand": "Cherry Cheeks",
+    "price": 18.50,
+    "stockQuantity": 18,
+    "active": true
+  }
+]
