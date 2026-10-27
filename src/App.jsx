@@ -19,6 +19,8 @@ import Register from "./pages/Register";
 import AdminSettings from "./pages/admin/AdminSettings";
 import About from "./pages/user/About";
 import Contact from './pages/user/Contact'
+import Cart from "./pages/user/Cart";
+import Checkout from './pages/user/Checkout'
 
 
 function App() {
@@ -66,10 +68,12 @@ function App() {
                 <Route path="about" element={<About />} />
                 <Route path="contact" element={<Contact />} />
                 <Route path="product-detail" element={<ProductDetail />} />
+                <Route path="cart" element={<Cart />} />
                 <Route path="wishlist" element={<Wishlist user={user} />} />
                 <Route path="profile" element={<Profile user={user} />} />
                 <Route path="orders" element={<OrderHistory user={user} />} />
                 <Route path="settings" element={<Settings handleLogout={handleLogout} />} />
+                <Route path="checkout" element={<Checkout />} />
             </Route>
 
             {/* Login */}

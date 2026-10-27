@@ -33,7 +33,7 @@ export default function Register() {
     localStorage.setItem('current_user', JSON.stringify(newUser));
 
     // Automatically log them in or redirect to login
-    navigate("/profile");
+    navigate("/login");
   }
 
   return (

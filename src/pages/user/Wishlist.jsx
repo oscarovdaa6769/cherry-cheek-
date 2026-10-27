@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from "@iconify/react";
 import Button from '../../components/common/Button'; 
@@ -9,7 +9,7 @@ import productsData from '../../data/products.json';
 export default function Wishlist({ user }) {
     const navigate = useNavigate();
 
-    // Verify both state prop and localStorage
+    // Helper to check live user state from localStorage
     const getStoredUser = () => {
         try {
             const item = localStorage.getItem('user');
@@ -20,7 +20,13 @@ export default function Wishlist({ user }) {
         }
     };
 
-    const activeUser = user && Object.keys(user).length > 0 ? user : getStoredUser();
+    const [activeUser, setActiveUser] = useState(() => user || getStoredUser());
+
+    // Sync user state whenever prop or localStorage changes
+    useEffect(() => {
+        setActiveUser(user || getStoredUser());
+    }, [user]);
+
     const isLoggedOut = !activeUser || Object.keys(activeUser).length === 0;
 
     const [wishlist, setWishlist] = useState(() => {
@@ -36,6 +42,30 @@ export default function Wishlist({ user }) {
         localStorage.setItem('wishlist', JSON.stringify(updatedIds));
     };
 
+    const addToCart = (item) => {
+        try {
+            const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+            const existingIndex = savedCart.findIndex(cartItem => cartItem.id === item.id);
+
+            if (existingIndex > -1) {
+                savedCart[existingIndex].quantity += 1;
+            } else {
+                savedCart.push({
+                    id: item.id,
+                    title: item.prodName,
+                    category: item.prodCate,
+                    price: item.prodPrice,
+                    image: item.image,
+                    quantity: 1
+                });
+            }
+            localStorage.setItem('cart', JSON.stringify(savedCart));
+            navigate('/cart');
+        } catch (err) {
+            console.error("Error adding to cart from wishlist", err);
+        }
+    };
+
     return (
         <main className="wishlist-page">
             <div className="wishlist-container">
@@ -47,7 +77,7 @@ export default function Wishlist({ user }) {
                     </div>
                 </div>
 
-                {/* 1. GUEST VIEW */}
+                {/* 1. GUEST VIEW - Takes priority if logged out */}
                 {isLoggedOut ? (
                     <div className="auth-guard-card">
                         <div className="auth-guard-icon-box">
@@ -100,7 +130,7 @@ export default function Wishlist({ user }) {
                                         )}
                                     </div>
                                     <div className="button-container">
-                                        <Button name="Add to cart" />
+                                        <Button name="Add to cart" onClick={() => addToCart(item)} />
                                         <button 
                                             className="remove-btn" 
                                             onClick={() => removeItem(item.id)}

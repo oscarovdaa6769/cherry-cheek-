@@ -3,8 +3,7 @@
 :root {
     /* color */
     --primary-color: #1D4533;
-    --secondary-color: #F7EAE0;
-    --footer-color: #5E3122;
+    --secondary-color: #FAFAFA;
     --description-color: #6B7280;
     --card-color: #FFFFFF;
     --background-color: #FAFAFA;
@@ -41,6 +40,9 @@
 
     --error-color: #DC2626;
     --hover-error-color: #B91C1C;
+
+    --hero-text-color: #FFFFFF;
+    --hero-overlay: rgba(0, 0, 0, 0.45);
 }
 
 [data-theme="dark"] {
@@ -57,6 +59,7 @@
 /* Typography styles */
 h1 {
   font-size: var(--text-header-1);
+  margin: 0;
 }
 
 h2 {
@@ -144,13 +147,9 @@ nav {
     margin: 0 auto;
 }
 
-main {
+.container {
   max-width: 1280px;
   margin: 0 auto;
-}
-
-section {
-  margin-top: 16px;
 }
 
 ul {
@@ -189,4 +188,42 @@ ul {
 .mini-icon a:hover {
   background-color: var(--hover-color);
   border: 1px solid var(--hover-color);
+}
+
+/* ===== NAV BADGE STYLING ===== */
+.icon-badge-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nav-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: var(--error-color, #DC2626);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border: 2px solid var(--primary-color);
+    line-height: 1;
+    animation: badge-pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes badge-pop {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

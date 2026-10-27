@@ -19,8 +19,9 @@
     "image": "src/assets/images/product-1.jpg",
     "features": [
       { "icon": "lucide:leaf", "label": "100% Organic Formula" },
-      { "icon": "ph:shield-check-fill", "label": "Dermatologist Tested" },
-      { "icon": "tabler:droplet-filled", "label": "24h Deep Moisture" }
+      { "icon": "ph:shield-check", "label": "Dermatologist Tested" },
+      { "icon": "tabler:droplet", "label": "24h Deep Moisture" },
+      { "icon": "lucide:sparkles", "label": "Instant Glow" }
     ],
     "details": "Formulated with wild-harvested botanical extracts and hyaluronic acid, this facial serum penetrates deep epidermal layers to revive dull skin and reduce fine dehydration lines."
   },
@@ -43,9 +44,9 @@
     "inStock": true,
     "image": "src/assets/images/product-2.jpg",
     "features": [
-      { "icon": "ph:bath-fill", "label": "pH Balanced" },
+      { "icon": "ph:bathtub", "label": "pH Balanced" },
       { "icon": "lucide:heart", "label": "Sulfate-Free" },
-      { "icon": "heroicons:sparkles-solid", "label": "Refreshing Scent" }
+      { "icon": "heroicons:sparkles", "label": "Refreshing Scent" }
     ],
     "details": "Enriched with aloe vera and chamomile water, this soothing body cleanser produces a rich, non-stripping foam suitable for daily use on sensitive skin."
   },
@@ -67,7 +68,7 @@
     "inStock": true,
     "image": "src/assets/images/product-3.jpg",
     "features": [
-      { "icon": "tabler:sun-filled", "label": "Instant Refresh" },
+      { "icon": "tabler:sun", "label": "Instant Refresh" },
       { "icon": "mdi:flower", "label": "Pure Damask Rose" },
       { "icon": "lucide:sparkles", "label": "Makeup Setting" }
     ],
@@ -91,9 +92,10 @@
     "inStock": true,
     "image": "src/assets/images/product-4.jpg",
     "features": [
-      { "icon": "ph:sun-dim-fill", "label": "Fades Dark Spots" },
+      { "icon": "ph:sun", "label": "Fades Dark Spots" },
       { "icon": "lucide:zap", "label": "15% Vitamin C" },
-      { "icon": "heroicons:shield-check-solid", "label": "Antioxidant Shield" }
+      { "icon": "heroicons:shield-check", "label": "Antioxidant Shield" },
+      { "icon": "lucide:sparkles", "label": "Radiance Boost" }
     ],
     "details": "Combines stabilized L-Ascorbic acid with ferulic acid and Vitamin E to boost collagen production, protect against environmental stressors, and fade hyperpigmentation."
   },
@@ -117,8 +119,8 @@
     "image": "src/assets/images/product-5.jpg",
     "features": [
       { "icon": "lucide:shield", "label": "Barrier Repair" },
-      { "icon": "tabler:droplet-filled", "label": "Triple Ceramides" },
-      { "icon": "ph:moon-stars-fill", "label": "Overnight Lock" }
+      { "icon": "tabler:droplet", "label": "Triple Ceramides" },
+      { "icon": "ph:moon", "label": "Overnight Lock" }
     ],
     "details": "A deeply restorative moisturizer containing a 3:1:1 lipid ratio of ceramides, cholesterol, and fatty acids to rebuild compromised skin barriers."
   },
@@ -141,8 +143,9 @@
     "image": "src/assets/images/product-6.jpg",
     "features": [
       { "icon": "mdi:tea", "label": "Jeju Green Tea" },
-      { "icon": "ph:sparkle-fill", "label": "Pore Deep Clean" },
-      { "icon": "lucide:smile", "label": "Gentle Lather" }
+      { "icon": "ph:sparkle", "label": "Pore Deep Clean" },
+      { "icon": "lucide:smile", "label": "Gentle Lather" },
+      { "icon": "lucide:droplet", "label": "Non-Stripping" }
     ],
     "details": "Infused with antioxidant-rich green tea extract from Jeju Island, this dense micro-foam lifts away excess sebum and dust without feeling tight."
   },
@@ -165,8 +168,8 @@
     "image": "src/assets/images/product-7.jpg",
     "features": [
       { "icon": "lucide:sun", "label": "SPF 50+ PA++++" },
-      { "icon": "tabler:ghost-filled", "label": "Zero White Cast" },
-      { "icon": "ph:palm-tree-fill", "label": "Reef Safe" }
+      { "icon": "tabler:ghost", "label": "Zero White Cast" },
+      { "icon": "ph:tree", "label": "Reef Safe" }
     ],
     "details": "Chemical-mineral hybrid UV filters deliver broad-spectrum protection against UVA/UVB rays and blue light, absorbed smoothly with a satin velvet finish."
   },
@@ -190,7 +193,8 @@
     "features": [
       { "icon": "mdi:bee", "label": "Propolis Extract" },
       { "icon": "lucide:moon", "label": "Overnight Repair" },
-      { "icon": "ph:heart-fill", "label": "Plumping Action" }
+      { "icon": "ph:heart", "label": "Plumping Action" },
+      { "icon": "lucide:sparkles", "label": "Soft Finish" }
     ],
     "details": "A rich, honey-infused ointment that creates a protective seal while you sleep, sloughing off dead skin flakes and leaving lips soft by morning."
   },
@@ -213,8 +217,8 @@
     "image": "src/assets/images/product-9.jpg",
     "features": [
       { "icon": "lucide:eye", "label": "Anti-Puffiness" },
-      { "icon": "ph:dna-fill", "label": "Matrixyl Peptides" },
-      { "icon": "tabler:snowflake-filled", "label": "Cooling Feel" }
+      { "icon": "ph:dna", "label": "Matrixyl Peptides" },
+      { "icon": "tabler:snowflake", "label": "Cooling Feel" }
     ],
     "details": "Formulated with quad-peptides and caffeine, this cooling gel targets micro-circulation under the eyes to visibly brighten fatigue circles."
   },
@@ -236,9 +240,10 @@
     "inStock": true,
     "image": "src/assets/images/product-10.jpg",
     "features": [
-      { "icon": "heroicons:sparkles-solid", "label": "Dual Acid Blend" },
+      { "icon": "heroicons:sparkles", "label": "Dual Acid Blend" },
       { "icon": "lucide:sliders", "label": "Texture Smoothing" },
-      { "icon": "ph:tree-leaf-fill", "label": "Willow Bark" }
+      { "icon": "ph:leaf", "label": "Willow Bark" },
+      { "icon": "lucide:droplet", "label": "Pore Clearing" }
     ],
     "details": "Contains 2% Glycolic Acid and 0.5% Salicylic Acid to gently loosen dead surface cells and dissolve pore-clogging sebum."
   },
@@ -260,9 +265,9 @@
     "inStock": true,
     "image": "src/assets/images/product-11.jpg",
     "features": [
-      { "icon": "ph:fire-fill", "label": "Australian Pink Clay" },
-      { "icon": "lucide:wand-2", "label": "Pore Tightening" },
-      { "icon": "tabler:heart-filled", "label": "Non-Drying" }
+      { "icon": "ph:fire", "label": "Australian Pink Clay" },
+      { "icon": "lucide:wand", "label": "Pore Tightening" },
+      { "icon": "tabler:heart", "label": "Non-Drying" }
     ],
     "details": "Australian pink kaolin clay extracts impurities and tightens visible pores in 10 minutes without drying out or tightening the skin painfully."
   },
@@ -285,8 +290,9 @@
     "image": "src/assets/images/product-12.jpg",
     "features": [
       { "icon": "lucide:droplet", "label": "100% Pure & Organic" },
-      { "icon": "ph:shield-check-fill", "label": "Omega 3, 6 & 9" },
-      { "icon": "tabler:snowflake-filled", "label": "Cold-Pressed" }
+      { "icon": "ph:shield-check", "label": "Omega 3, 6 & 9" },
+      { "icon": "tabler:snowflake", "label": "Cold-Pressed" },
+      { "icon": "lucide:sparkles", "label": "Elasticity Boost" }
     ],
     "details": "Unrefined, virgin cold-pressed rosehip seed oil packed with Pro-Vitamin A and essential fatty acids to soothe scarring and restore elasticity."
   },
@@ -309,7 +315,7 @@
     "image": "src/assets/images/product-13.jpg",
     "features": [
       { "icon": "mdi:coconut", "label": "Raw Shea Butter" },
-      { "icon": "ph:drop-fill", "label": "Intense Moisture" },
+      { "icon": "ph:drop", "label": "Intense Moisture" },
       { "icon": "lucide:sun", "label": "Tropical Aroma" }
     ],
     "details": "A whipped, decadent body cream that melts instantly upon contact with skin to relieve dry knees, elbows, and rough heels."
@@ -332,9 +338,10 @@
     "inStock": true,
     "image": "src/assets/images/product-14.jpg",
     "features": [
-      { "icon": "ph:plant-fill", "label": "Colloidal Oat" },
+      { "icon": "ph:plant", "label": "Colloidal Oat" },
       { "icon": "lucide:star", "label": "Melt-Away Texture" },
-      { "icon": "tabler:eye-filled", "label": "Safe Around Eyes" }
+      { "icon": "tabler:eye", "label": "Safe Around Eyes" },
+      { "icon": "lucide:shield", "label": "Barrier Protect" }
     ],
     "details": "Transforms from a nourishing balm to a silky oil upon application, dissolving stubborn waterproof mascara and SPF while preserving moisture."
   },
@@ -358,8 +365,8 @@
     "image": "src/assets/images/product-15.jpg",
     "features": [
       { "icon": "lucide:activity", "label": "10% Niacinamide" },
-      { "icon": "ph:lightning-fill", "label": "1% Zinc PCA" },
-      { "icon": "heroicons:shield-check-solid", "label": "Seated Oil Control" }
+      { "icon": "ph:lightning", "label": "1% Zinc PCA" },
+      { "icon": "heroicons:shield-check", "label": "Seated Oil Control" }
     ],
     "details": "High-strength vitamin and mineral formula reduces blemish marks, shrinks dilated pores, and regulates sebum for a smooth matte finish."
   },
@@ -382,8 +389,9 @@
     "image": "src/assets/images/product-16.jpg",
     "features": [
       { "icon": "lucide:sparkles", "label": "96% Snail Mucin" },
-      { "icon": "ph:waves-fill", "label": "Deep Elasticity" },
-      { "icon": "tabler:shield-check-filled", "label": "Barrier Repair" }
+      { "icon": "ph:waves", "label": "Deep Elasticity" },
+      { "icon": "tabler:shield-check", "label": "Barrier Repair" },
+      { "icon": "lucide:heart", "label": "Soothing Care" }
     ],
     "details": "Lightweight essence formulated with 96% snail secretion filtrate to soothe redness, heal post-breakout scars, and restore plumpness."
   },
@@ -406,7 +414,7 @@
     "image": "src/assets/images/product-17.jpg",
     "features": [
       { "icon": "lucide:leaf", "label": "70% Centella Water" },
-      { "icon": "ph:snowflake-fill", "label": "Cooling Gel" },
+      { "icon": "ph:snowflake", "label": "Cooling Gel" },
       { "icon": "tabler:check", "label": "Acne-Prone Safe" }
     ],
     "details": "Oil-free gel moisturizer powered by Centella Asiatica and tea tree extracts to cool flushed skin, calm inflammation, and regulate moisture."
@@ -430,8 +438,9 @@
     "image": "src/assets/images/product-18.jpg",
     "features": [
       { "icon": "lucide:palette", "label": "Sheer Berry Tint" },
-      { "icon": "ph:drop-fill", "label": "Jojoba Oil" },
-      { "icon": "heroicons:sparkles-solid", "label": "Glossy Finish" }
+      { "icon": "ph:drop", "label": "Jojoba Oil" },
+      { "icon": "heroicons:sparkles", "label": "Glossy Finish" },
+      { "icon": "lucide:heart", "label": "Lip Plump" }
     ],
     "details": "Hydrating lip balm enriched with wild berry oils and shea butter that reacts to your natural temperature for a flush of personalized glow."
   },
@@ -454,7 +463,7 @@
     "image": "src/assets/images/product-19.jpg",
     "features": [
       { "icon": "lucide:coffee", "label": "Arabica Coffee Grounds" },
-      { "icon": "ph:sparkle-fill", "label": "Cellulite Smoothing" },
+      { "icon": "ph:sparkle", "label": "Cellulite Smoothing" },
       { "icon": "tabler:recycle", "label": "Zero Waste Bar" }
     ],
     "details": "Made with recycled organic Arabica coffee grounds and sweet almond oil to stimulate circulation, smooth bumpy texture, and firm skin."
@@ -477,9 +486,10 @@
     "inStock": true,
     "image": "src/assets/images/product-20.jpg",
     "features": [
-      { "icon": "ph:leaf-fill", "label": "2% Plant Bakuchiol" },
-      { "icon": "lucide:sun-medium", "label": "Day & Night Safe" },
-      { "icon": "heroicons:star-solid", "label": "Gentle Renewal" }
+      { "icon": "ph:leaf", "label": "2% Plant Bakuchiol" },
+      { "icon": "lucide:sun", "label": "Day & Night Safe" },
+      { "icon": "heroicons:star", "label": "Gentle Renewal" },
+      { "icon": "lucide:sparkles", "label": "Firming" }
     ],
     "details": "A gentle botanical serum containing 2% Bakuchiol to smooth fine lines, encourage cell turnover, and boost collagen without purging or redness."
   }

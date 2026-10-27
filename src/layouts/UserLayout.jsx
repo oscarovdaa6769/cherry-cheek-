@@ -1,5 +1,6 @@
 import Header from "../components/layout/Header"
 import { Outlet, Link } from "react-router-dom"
+import Footer from '../components/layout/Footer'
 
 function UserLayout({ handleLogout }) {
     return (
@@ -8,6 +9,7 @@ function UserLayout({ handleLogout }) {
             <main className="">
                 <Outlet context={{ handleLogout }}/>
             </main>
+            <Footer handleLogout={handleLogout} />
         </div>
     )
 }

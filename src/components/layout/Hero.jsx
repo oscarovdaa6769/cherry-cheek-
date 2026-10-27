@@ -1,31 +1,34 @@
-import CherryCheek from '../../assets/images/cherryCheek.png';
-import Btn from "../common/Button"
+import HeroBanner from '../../assets/images/banner.jpg';
+import Btn from "../common/Button";
+import './Hero.css';
+import '../../App.css';
 
-function Hero() {
+export default function Hero() {
   return (
     <section
       className="hero"
+      aria-label="Cherry Cheek skincare collection"
       style={{
-        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(${CherryCheek})`,
+        backgroundImage: `linear-gradient(var(--hero-overlay), var(--hero-overlay)), url(${HeroBanner})`,
       }}
     >
-      <div className="hero-content">
-        <p className="hero-label small-1">
-          CHERRY CHEEK · SKINCARE COLLECTION
-        </p>
+      {/* New wrapper to match header's max-width */}
+      <div className="hero-container">
+        <div className="hero-content">
+          <p className="hero-label">
+            CHERRY CHEEK · SKINCARE COLLECTION
+          </p>
 
-        <h1 className='hero-heading'>Your Skin, Your Natural Glow.</h1>
+          <h1 className="hero-heading">Your Skin, Your Natural Glow.</h1>
 
-        <p className="hero-description">
-          Discover gentle skincare made to nourish
-          your skin and bring out your natural
-          beauty, every day.
-        </p>
+          <p className="hero-description">
+            Discover gentle skincare made to nourish your skin and bring out
+            your natural beauty, every day.
+          </p>
 
-        <Btn name="Shop now"/>
+          <Btn name="Shop now" className="hero-button" />
+        </div>
       </div>
     </section>
   );
 }
-
-export default Hero;

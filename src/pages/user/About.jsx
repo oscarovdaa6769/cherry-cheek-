@@ -6,7 +6,7 @@ import '../../App.css'
 /* ---------- Page ---------- */
 export default function About() {
   return (
-    <main className="about-page">
+    <main className="about-page container">
       {/* Header: title left, short text right */}
       <section className="about-header">
         <h1 className="about-header__title">About Us</h1>

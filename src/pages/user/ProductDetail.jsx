@@ -1,39 +1,43 @@
-import "../../App.css"
-import { Icon } from "@iconify/react"
-import Btn from "../../components/common/Button"
-import Review from "../../components/common/Review"
+import "../../App.css";
+import { Icon } from "@iconify/react";
+import Btn from "../../components/common/Button";
+import Review from "../../components/common/Review";
 import { useState, useEffect } from 'react';
-import "./ProductDetail.css"
-import productsData from '../../data/products.json'
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import "./ProductDetail.css";
+import productsData from '../../data/products.json';
 
 export default function ProductDetail() {
-    const { id } = useParams();
-    const product = productsData.find((p) => p.id === Number(id)) || productsData[0];
+    const navigate = useNavigate();
+    const { id: paramId } = useParams();
+    const [searchParams] = useSearchParams();
+    
+    // Read product ID either from URL query string ?id=X or param /:id
+    const productId = Number(paramId || searchParams.get('id')) || 1;
+    const product = productsData.find((p) => p.id === productId) || productsData[0];
 
-    const [selectedSize, setSelectedSize] = useState('50ml');
+    const [selectedSize, setSelectedSize] = useState(product.sizes?.[0] || '50ml');
     const [quantity, setQuantity] = useState(1);
     const [showToast, setShowToast] = useState(false);
-    
-    // Check localStorage on load/route change to see if this product is already wishlisted
+    const [toastMessage, setToastMessage] = useState('');
+
     const [isWishlisted, setIsWishlisted] = useState(() => {
         const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         return savedWishlist.includes(product.id);
     });
-    const [toastMessage, setToastMessage] = useState('');
 
-    // Keep wishlist state synced if the product ID changes via route params
     useEffect(() => {
         const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         setIsWishlisted(savedWishlist.includes(product.id));
+        if (product.sizes?.length > 0) {
+            setSelectedSize(product.sizes[0]);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }, [product.id]);
 
     const handleWishlist = () => {
         setShowToast(true);
-
-        setTimeout(() => {
-            setShowToast(false);
-        }, 3000);
+        setTimeout(() => setShowToast(false), 3000);
 
         const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
         const nextWishlistState = !isWishlisted;
@@ -48,15 +52,37 @@ export default function ProductDetail() {
             setToastMessage('Removed from your wishlist');
         }
 
-        // Save changes to localStorage so Wishlist.jsx can read them
         localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
-    }
+    };
+
+    const handleAddToCart = () => {
+        const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
+        const existingIndex = savedCart.findIndex(item => item.id === product.id);
+
+        if (existingIndex > -1) {
+            savedCart[existingIndex].quantity += quantity;
+        } else {
+            savedCart.push({
+                id: product.id,
+                title: product.prodName,
+                category: product.prodCate,
+                price: product.prodPrice,
+                image: product.image,
+                quantity: quantity
+            });
+        }
+
+        localStorage.setItem('cart', JSON.stringify(savedCart));
+        setToastMessage('Added to cart');
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 3000);
+    };
 
     return (
-        <main>
+        <main className="container" style={{ paddingBottom: '60px' }}>
             <div className="product-detail-header">
                 <div>
-                    <Btn name="Back"/>
+                    <Btn name="Back" onClick={() => navigate(-1)} />
                 </div>
             </div>
             <section className="product-detail-section">
@@ -72,33 +98,35 @@ export default function ProductDetail() {
                         <h1 className="product-detail-name">{product.prodName}</h1>
                         
                         <div className="product-detail-review">
-                            <Review rating={product.prodRev.rating} />
-                            <span className="review-count">{product.prodRev.count} reviews</span>
+                            <Review rating={product.prodRev?.rating || 5} />
+                            <span className="review-count">{product.prodRev?.count || 0} reviews</span>
                         </div>
 
                         <div className="product-price-wrapper">
                             <span className="product-detail-price">{product.prodPrice}</span>
-                            <span className="product-old-price">{product.prodOldPrice}</span>
-                            <span className="discount-badge">{product.prodDiscount}</span>
+                            {product.prodOldPrice && <span className="product-old-price">{product.prodOldPrice}</span>}
+                            {product.prodDiscount && <span className="discount-badge">{product.prodDiscount}</span>}
                         </div>
 
                         <p className="product-description">{product.prodDesc}</p>
 
-                        <div className="product-size-section">
-                            <label className="size-label">Size:</label>
-                            <div className="size-options">
-                                {product.sizes.map((size) => (
-                                    <button 
-                                        key={size}
-                                        type="button"
-                                        className={`size-btn ${selectedSize === size ? 'active' : ''}`}
-                                        onClick={() => setSelectedSize(size)}
-                                    >
-                                        {size}
-                                    </button>
-                                ))}
+                        {product.sizes && product.sizes.length > 0 && (
+                            <div className="product-size-section">
+                                <label className="size-label">Size:</label>
+                                <div className="size-options">
+                                    {product.sizes.map((size) => (
+                                        <button 
+                                            key={size}
+                                            type="button"
+                                            className={`size-btn ${selectedSize === size ? 'active' : ''}`}
+                                            onClick={() => setSelectedSize(size)}
+                                        >
+                                            {size}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
-                        </div>
+                        )}
 
                         <div className="product-action-row">
                             <div className="quantity-selector">
@@ -111,31 +139,32 @@ export default function ProductDetail() {
                                 </button>
                             </div>
 
-                            <button type="button" className="add-to-cart-btn">
+                            <button type="button" className="add-to-cart-btn" onClick={handleAddToCart}>
                                 ADD TO CART
                             </button>
 
                             <button type="button" className={`wishlist-btn ${isWishlisted ? 'active' : ''}`} aria-label="Save to wishlist" onClick={handleWishlist}>
                                 <Icon icon={isWishlisted ? "solar:heart-bold" : "solar:heart-linear"} />
                             </button>
-                            {showToast && (
-                                <div className={`wishlist-toast ${isWishlisted ? 'added' : 'removed'}`}>
-                                    <Icon 
-                                        icon={isWishlisted ? "solar:check-circle-bold" : "solar:minus-circle-bold"} 
-                                    />
-                                    <span>{toastMessage}</span>
-                                </div>
-                            )}
                         </div>
 
-                        <div className="product-features-grid">
-                            {(product.features || []).map((feat, index) => (
-                                <div key={index} className="feature-card">
-                                    <Icon icon={feat.icon} />
-                                    <span>{feat.label}</span>
-                                </div>
-                            ))}
-                        </div>
+                        {showToast && (
+                            <div className="wishlist-toast">
+                                <Icon icon="solar:check-circle-bold" />
+                                <span>{toastMessage}</span>
+                            </div>
+                        )}
+
+                        {product.features && product.features.length > 0 && (
+                            <div className="product-features-grid">
+                                {product.features.map((feat, index) => (
+                                    <div key={index} className="feature-card">
+                                        <Icon icon={feat.icon} />
+                                        <span>{feat.label}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
                         <div className="product-accordion">
                             <div className="accordion-header">
@@ -148,5 +177,5 @@ export default function ProductDetail() {
                 </div>
             </section>
         </main>
-    )
+    );
 }
