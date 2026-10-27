@@ -1,82 +1,28 @@
-import { useState } from "react";
+
+import { useEffect, useState } from "react";
 import "./Products.css";
 import Card from "../components/Card";
 
-const CATEGORIES = ["All", "Skincare", "Makeup", "Hair Care", "Body Care"];
+const CATEGORIES = [
+  "All",
+  "Skincare",
+  "Makeup",
+  "Hair Care",
+  "Body Care",
+];
+
+const PAGE_SIZES = [12, 10, 8, 7];
+const TOTAL_PAGES = PAGE_SIZES.length;
 
 const sampleImage =
   "https://www.personalcarecouncil.org/wp-content/smush-webp/2025/03/AdobeStock_218950992-square-crop.jpeg.webp";
 
-/* ---------- Data ---------- */
-
-// group = what the top pills filter on, section = the heading shown on the page
-const tag = (list, group, section) =>
-  list.map((p) => ({ ...p, group, section }));
-
-const popularProducts = tag(
-  [
-    { id: 1, image: sampleImage, category: "Moisturizers", title: "Hydrating Face Cream", price: 25, outOfStock: true },
-    { id: 2, image: sampleImage, category: "Face Essentials", title: "Rose Glow Set", price: 32, outOfStock: true },
-    { id: 3, image: sampleImage, category: "Cleansers", title: "Nourishing Cleanser", price: 18, outOfStock: true },
-    { id: 4, image: sampleImage, category: "Gift Sets", title: "Daily Ritual Set", price: 40 },
-  ],
-  "Skincare",
-  "Popular Product"
-);
-
-const skinCareProducts = tag(
-  [
-    { id: 5, image: sampleImage, category: "Moisturizers", title: "Hydrating Face Cream", price: 25 },
-    { id: 6, image: sampleImage, category: "Face Essentials", title: "Rose Glow Set", price: 32 },
-    { id: 7, image: sampleImage, category: "Cleansers", title: "Nourishing Cleanser", price: 18 },
-    { id: 8, image: sampleImage, category: "Gift Sets", title: "Daily Ritual Set", price: 40 },
-  ],
-  "Skincare",
-  "Skin Care"
-);
-
-const makeUpProducts = tag(
-  [
-    { id: 9, image: sampleImage, category: "Lips", title: "Cherry Lip Tint", price: 12 },
-    { id: 10, image: sampleImage, category: "Face", title: "Rose Blush", price: 20 },
-    { id: 11, image: sampleImage, category: "Eyes", title: "Soft Eye Palette", price: 28 },
-    { id: 12, image: sampleImage, category: "Face", title: "Glow Foundation", price: 35 },
-  ],
-  "Makeup",
-  "Makeup"
-);
-
-const extraProducts = Array.from({ length: 25 }, (_, index) => ({
-  id: index + 13,
-  image: sampleImage,
-  category: "Skincare",
-  title: `Beauty Product ${index + 13}`,
-  price: 15 + index,
-  group: "Skincare",
-  section: "More Products",
-}));
-
-const allProducts = [
-  ...popularProducts,
-  ...skinCareProducts,
-  ...makeUpProducts,
-];
-
-const productsForPagination = [...allProducts, ...extraProducts];
-
-// Products per page (12 + 10 + 8 + 7 = 37 total)
-const PAGE_SIZES = {
-  1: 12,
-  2: 10,
-  3: 8,
-  4: 7,
-};
-
-const TOTAL_PAGES = Object.keys(PAGE_SIZES).length;
-
-/* ---------- Components ---------- */
+const normalize = (text = "") =>
+  text.toLowerCase().replace(/\s+/g, "");
 
 function ProductSection({ title, products }) {
+  if (products.length === 0) return null;
+
   return (
     <>
       <h2 className="section-title">{title}</h2>
@@ -98,47 +44,121 @@ function ProductSection({ title, products }) {
 }
 
 function Products() {
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* ----- Search + category filtering ----- */
-  // ignore spaces and capitals so "skin care", "Skincare" and "make up" all match
-  const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        setLoading(true);
+        setError("");
 
-  const query = normalize(searchTerm);
-  const isFiltering = query !== "" || activeCategory !== "All";
+        const [productsResponse, categoriesResponse] =
+          await Promise.all([
+            fetch("/data/products.json"),
+            fetch("/data/categories.json"),
+          ]);
 
-  const filteredProducts = productsForPagination.filter((product) => {
-    const matchesCategory =
-      activeCategory === "All" || product.group === activeCategory;
+        if (!productsResponse.ok || !categoriesResponse.ok) {
+          throw new Error("Failed to load product data.");
+        }
 
-    const matchesSearch =
-      query === "" ||
-      normalize(product.title).includes(query) ||
-      normalize(product.category).includes(query) ||
-      normalize(product.section).includes(query);
+        const productsData = await productsResponse.json();
+        const categoriesData = await categoriesResponse.json();
 
-    return matchesCategory && matchesSearch;
+        setProducts(productsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  const productsWithCategories = products.map((product) => {
+    const category = categories.find(
+      (item) => item.id === product.categoryId
+    );
+
+    return {
+      ...product,
+      image: sampleImage,
+      title: product.name,
+      category: category ? category.name : "Other",
+      group: category ? category.name : "Other",
+      outOfStock: product.stockQuantity <= 0,
+    };
   });
 
-  /* ----- Pagination (only used when not filtering) ----- */
-  const startIndex = Object.entries(PAGE_SIZES)
-    .filter(([page]) => Number(page) < currentPage)
-    .reduce((total, [, size]) => total + size, 0);
+  const query = normalize(searchTerm);
 
-  const currentProducts = productsForPagination.slice(
-    startIndex,
-    startIndex + PAGE_SIZES[currentPage]
+  const isFiltering =
+    query !== "" || activeCategory !== "All";
+
+  const filteredProducts = productsWithCategories.filter(
+    (product) => {
+      const matchesCategory =
+        activeCategory === "All" ||
+        normalize(product.group) === normalize(activeCategory);
+
+      const matchesSearch =
+        query === "" ||
+        normalize(product.title).includes(query) ||
+        normalize(product.category).includes(query) ||
+        normalize(product.brand).includes(query) ||
+        normalize(product.sku).includes(query);
+
+      return matchesCategory && matchesSearch;
+    }
   );
 
+  // Page 1: Skincare, Makeup, and Hair Care
+  // Page 2: Fragrance and Body Care
+  // Pages 3 and 4: Remaining products, if available
+  const pageProducts = {
+    1: filteredProducts.filter(
+      (product) =>
+        !["Fragrance", "Body Care"].includes(product.category)
+    ),
+    2: filteredProducts.filter((product) =>
+      ["Fragrance", "Body Care"].includes(product.category)
+    ),
+  };
+
+  const productsForPagination =
+    pageProducts[currentPage] || filteredProducts;
+
+  const startIndex = PAGE_SIZES
+    .slice(0, currentPage - 1)
+    .reduce((total, size) => total + size, 0);
+
+  const productsPerPage = PAGE_SIZES[currentPage - 1];
+
+  const currentProducts = isFiltering
+    ? filteredProducts.slice(0, PAGE_SIZES[0])
+    : currentPage <= 2
+      ? productsForPagination.slice(0, productsPerPage)
+      : filteredProducts.slice(startIndex, startIndex + productsPerPage);
+
+  const totalPages = TOTAL_PAGES;
+
   const goToPage = (page) => {
+    if (page < 1 || page > TOTAL_PAGES) return;
+
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const handleSearchSubmit = (e) => {
-    e.preventDefault(); // search is live; Enter / button just prevents a page reload
+  const handleSearchSubmit = (event) => {
+    event.preventDefault();
   };
 
   const clearFilters = () => {
@@ -146,6 +166,9 @@ function Products() {
     setActiveCategory("All");
     setCurrentPage(1);
   };
+
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error loading products: {error}</p>;
 
   return (
     <div className="main-products-page">
@@ -160,36 +183,51 @@ function Products() {
           </div>
 
           <div className="title-description">
-            Thoughtful skin care made with plant-powered ingredients,
-            designed to bring out your natural radiance.
+            Thoughtful skin care made with plant-powered
+            ingredients, designed to bring out your natural
+            radiance.
           </div>
 
           <div className="category-filters">
-            {CATEGORIES.map((cat) => (
+            {CATEGORIES.map((category) => (
               <button
-                key={cat}
+                key={category}
                 type="button"
                 className={`category-pill ${
-                  activeCategory === cat ? "active" : ""
+                  activeCategory === category ? "active" : ""
                 }`}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => {
+                  setActiveCategory(category);
+                  setCurrentPage(1);
+                }}
               >
-                {cat}
+                {category}
               </button>
             ))}
           </div>
         </div>
 
-        <form className="search" onSubmit={handleSearchSubmit} role="search">
+        <form
+          className="search"
+          onSubmit={handleSearchSubmit}
+          role="search"
+        >
           <input
             type="text"
             placeholder="Find Your Favorite Products here"
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(event) => {
+              setSearchTerm(event.target.value);
+              setCurrentPage(1);
+            }}
             aria-label="Search products"
           />
 
-          <button className="search-btn" type="submit" aria-label="Search">
+          <button
+            className="search-btn"
+            type="submit"
+            aria-label="Search"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -209,41 +247,51 @@ function Products() {
         </form>
       </section>
 
-      {/* ----- Product area ----- */}
-      {isFiltering ? (
-        filteredProducts.length > 0 ? (
+      {/* Product area */}
+      {currentProducts.length > 0 ? (
+        isFiltering ? (
           <ProductSection
             title={`Results (${filteredProducts.length})`}
-            products={filteredProducts}
+            products={currentProducts}
           />
         ) : (
-          <>
-            <h2 className="section-title">No products found</h2>
-            <p style={{ padding: "12px var(--side-space) 60px" }}>
-              Try a different search or category.{" "}
-              <button type="button" onClick={clearFilters}>
-                Clear filters
-              </button>
-            </p>
-          </>
+          categories.map((category) => {
+            const categoryProducts = currentProducts.filter(
+              (product) => product.category === category.name
+            );
+
+            return (
+              <ProductSection
+                key={category.id}
+                title={category.name}
+                products={categoryProducts}
+              />
+            );
+          })
         )
-      ) : currentPage === 1 ? (
-        <>
-          <ProductSection title="Popular Product" products={popularProducts} />
-          <ProductSection title="Skin Care" products={skinCareProducts} />
-          <ProductSection title="Makeup" products={makeUpProducts} />
-        </>
       ) : (
-        <ProductSection title="More Products" products={currentProducts} />
+        <>
+          <h2 className="section-title">No products found</h2>
+
+          <p style={{ padding: "12px var(--side-space) 60px" }}>
+            Try a different search or category.{" "}
+            <button type="button" onClick={clearFilters}>
+              Clear filters
+            </button>
+          </p>
+        </>
       )}
 
-      {/* Pagination is hidden while searching or filtering */}
+      {/* Pagination */}
       {!isFiltering && (
-        <nav className="pagination" aria-label="Product pagination">
+        <nav
+          className="pagination"
+          aria-label="Product pagination"
+        >
           <button
             type="button"
             className="page-arrow"
-            onClick={() => goToPage(Math.max(1, currentPage - 1))}
+            onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
             aria-label="Previous page"
           >
@@ -252,13 +300,20 @@ function Products() {
             </svg>
           </button>
 
-          {Array.from({ length: TOTAL_PAGES }, (_, i) => i + 1).map((page) => (
+          {Array.from(
+            { length: totalPages },
+            (_, index) => index + 1
+          ).map((page) => (
             <button
               key={page}
               type="button"
-              className={`page-number ${currentPage === page ? "active" : ""}`}
+              className={`page-number ${
+                currentPage === page ? "active" : ""
+              }`}
               onClick={() => goToPage(page)}
-              aria-current={currentPage === page ? "page" : undefined}
+              aria-current={
+                currentPage === page ? "page" : undefined
+              }
             >
               {page}
             </button>
@@ -267,8 +322,8 @@ function Products() {
           <button
             type="button"
             className="page-arrow"
-            onClick={() => goToPage(Math.min(TOTAL_PAGES, currentPage + 1))}
-            disabled={currentPage === TOTAL_PAGES}
+            onClick={() => goToPage(currentPage + 1)}
+            disabled={currentPage === totalPages}
             aria-label="Next page"
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
