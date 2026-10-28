@@ -1,20 +1,27 @@
+import { useState, useEffect } from "react";
 
-import Header from "./components/layout/Header"
-import Hero from "./components/layout/Hero"
-import Footer from "./components/layout/Footer"
-import Order from "./pages/Order";
-import Products from "./pages/Products";
-  
+export default function App() {
+  const [categories, setCategories] = useState([]);
 
-function App() {
+  useEffect(() => {
+    async function loadCategories() {
+      try {
+        const response = await fetch("/data/categories.json");
+        if (!response.ok) throw new Error("Failed to load categories");
+        const data = await response.json();
+
+        console.log(data);        // shows in the Console tab
+        setCategories(data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    loadCategories();
+  }, []);
+
   return (
-    <div className="container">
-      <Header />
-      <Products />
-      <Footer />
+    <div>
+    
     </div>
   );
-
 }
-
-export default App;
