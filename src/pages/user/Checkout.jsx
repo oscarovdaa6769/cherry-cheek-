@@ -1,49 +1,37 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { Link, useNavigate } from "react-router-dom";
+import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Checkout.css";
 import "../../App.css";
-
-const initialProducts = [
-  {
-    id: 1,
-    name: "Rom&nd Juicy Lasting Tint",
-    detail: "#06 Figfig",
-    price: 12,
-    image:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=180&h=180&fit=crop",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "3CE Take A Layer Multi Pot",
-    detail: "#Rosy",
-    price: 18,
-    image:
-      "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=180&h=180&fit=crop",
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "SKIN1004 Madagascar Centella",
-    detail: "Toning Toner",
-    price: 16,
-    image:
-      "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=180&h=180&fit=crop",
-    quantity: 1,
-  },
-];
 
 const paymentMethods = [
   { id: "card", title: "Credit / Debit Card", detail: "Visa, Mastercard, JCB", icon: "solar:card-bold-duotone" },
   { id: "aba", title: "ABA PAY", detail: "ABA Mobile", icon: "solar:smartphone-bold-duotone" },
   { id: "cash", title: "Cash on Delivery", detail: "Pay when you receive", icon: "solar:wallet-money-bold-duotone" },
-  { id: "bank", title: "Bank Transfer", detail: "Direct bank transfer", icon: "solar:bank-bold-duotone" },
+  { id: "bank", title: "Bank Transfer", detail: "Direct bank transfer", icon: "solar:buildings-2-bold-duotone" },
 ];
 
 export default function Checkout() {
   const navigate = useNavigate();
-  const [products, setProducts] = useState(initialProducts);
+
+  // Load cart items dynamically from localStorage
+  const [products, setProducts] = useState(() => {
+    try {
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      return savedCart.map((item) => ({
+        id: item.id,
+        name: item.title || item.name || "Cosmetic Product",
+        detail: item.category || "Skincare",
+        price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace('$', '')) || 0,
+        image: item.image || fallbackImg,
+        quantity: item.quantity || 1,
+      }));
+    } catch {
+      return [];
+    }
+  });
+
   const [delivery, setDelivery] = useState("standard");
   const [payment, setPayment] = useState("card");
   const [promo, setPromo] = useState("");
@@ -59,6 +47,16 @@ export default function Checkout() {
     city: "",
     postal: "",
   });
+
+  // Keep localStorage cart synchronized when quantities or items change
+  useEffect(() => {
+    try {
+      localStorage.setItem("cart", JSON.stringify(products));
+      window.dispatchEvent(new Event("storage"));
+    } catch (err) {
+      console.error("Failed to update cart in localStorage", err);
+    }
+  }, [products]);
 
   const subtotal = useMemo(
     () =>
@@ -129,6 +127,10 @@ export default function Checkout() {
       return;
     }
 
+    // Clear cart upon successful order placement
+    localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("storage"));
+
     setMessage("");
     setOrderPlaced(true);
   }
@@ -155,7 +157,7 @@ export default function Checkout() {
             className="checkout-primary-button"
             onClick={() => {
               setOrderPlaced(false);
-              setProducts(initialProducts);
+              setProducts([]);
               setForm({
                 name: "",
                 phone: "",
@@ -426,7 +428,7 @@ export default function Checkout() {
               {products.map((product) => (
                 <article className="checkout-product" key={product.id}>
                   <img
-                    src={product.image}
+                    src={product.image || fallbackImg}
                     alt={product.name}
                     loading="lazy"
                   />

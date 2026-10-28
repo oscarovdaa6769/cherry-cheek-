@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Button from '../../components/common/Button';
-import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
-import categoriesData from '../../data/cherry-cheek-JSON-Data/categories.json';
+import productsData from '../../data/products.json';
+import categoriesData from '../../data/categories.json';
 import './Wishlist.css';
 import '../../App.css';
 

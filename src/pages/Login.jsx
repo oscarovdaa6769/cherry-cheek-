@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import accountsData from "../data/cherry-cheek-JSON-Data/accounts.json";
+import accountsData from "../data/accounts.json";
 import "./Login.css";
 import "../App.css";
 

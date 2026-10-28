@@ -27,6 +27,7 @@ import Checkout from './pages/user/Checkout'
 // login & register
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import Order from "./pages/user/Order";
 
 
 

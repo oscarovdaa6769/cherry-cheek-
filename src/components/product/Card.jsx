@@ -83,6 +83,13 @@ function Card({
           });
         }
         localStorage.setItem('cart', JSON.stringify(savedCart));
+
+        // Dispatch custom event to show the toast notification
+        window.dispatchEvent(
+          new CustomEvent('cart-added', { detail: `Added "${title}" to your cart!` })
+        );
+        // Dispatch storage event so header cart counters update
+        window.dispatchEvent(new Event('storage'));
       } catch (err) {
         console.error("Error adding to cart", err);
       }

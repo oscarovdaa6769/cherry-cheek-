@@ -5,8 +5,8 @@ import Review from "../../components/common/Review";
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import "./ProductDetail.css";
-import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
-import categoriesData from '../../data/cherry-cheek-JSON-Data/categories.json';
+import productsData from '../../data/products.json';
+import categoriesData from '../../data/categories.json';
 
 const categoryMap = categoriesData.reduce((acc, cat) => {
   acc[cat.id] = cat.name;

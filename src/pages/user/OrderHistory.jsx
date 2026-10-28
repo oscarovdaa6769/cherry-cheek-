@@ -4,8 +4,8 @@ import Button from '../../components/common/Button';
 import './OrderHistory.css';
 import '../../App.css';
 import { useNavigate } from 'react-router-dom';
-import invoicesData from '../../data/cherry-cheek-JSON-Data/invoices.json';
-import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
+import invoicesData from '../../data/invoices.json';
+import productsData from '../../data/products.json';
 
 // Map product lookup for order items
 const productMap = productsData.reduce((acc, p) => {

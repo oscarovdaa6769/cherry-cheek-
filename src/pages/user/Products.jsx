@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import "./Products.css";
 import Card from "../../components/product/Card";
-import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
-import categoriesData from '../../data/cherry-cheek-JSON-Data/categories.json';
+import productsData from '../../data/products.json';
+import categoriesData from '../../data/categories.json';
 import '../../App.css';
 
 /* ---------- Data Mapping ---------- */
@@ -55,6 +55,17 @@ export const Product = () => {
   const [activeCategory, setActiveCategory] = useState("All");
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [notification, setNotification] = useState("");
+
+  // Listen for cart-added custom events dispatched by product cards
+  useEffect(() => {
+    const handleCartNotification = (e) => {
+      setNotification(e.detail || "Item added to your cart!");
+      setTimeout(() => setNotification(""), 3000);
+    };
+    window.addEventListener('cart-added', handleCartNotification);
+    return () => window.removeEventListener('cart-added', handleCartNotification);
+  }, []);
 
   const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
   const query = normalize(searchTerm);
@@ -102,6 +113,14 @@ export const Product = () => {
     <div className="main-products-page">
       <div className="products-content-container">
         
+        {/* Toast Notification Banner */}
+        {notification && (
+          <div className="reorder-toast">
+            <Icon icon="solar:check-circle-bold" />
+            <span>{notification}</span>
+          </div>
+        )}
+
         {/* ----- Hero Section ----- */}
         <section className="products-hero">
           <div className="title">

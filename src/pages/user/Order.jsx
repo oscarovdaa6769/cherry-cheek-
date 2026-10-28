@@ -1,37 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Order.css";
 
-const initialProducts = [
-  {
-    id: 1,
-    name: "Hydrating Face Cream",
-    price: 18,
-    image:
-      "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=300&auto=format&fit=crop",
-    quantity: 1,
-  },
-  {
-    id: 2,
-    name: "Rose Lipstick",
-    price: 16,
-    image:
-      "https://images.unsplash.com/photo-1586495777744-4413f21062fa?w=300&auto=format&fit=crop",
-    quantity: 1,
-  },
-  {
-    id: 3,
-    name: "Vitamin C Sheet Mask",
-    price: 12,
-    image:
-      "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?w=300&auto=format&fit=crop",
-    quantity: 1,
-  },
-];
+const DELIVERY_FEE = 2.00;
 
-const DELIVERY_FEE = 2;
+export default function Order() {
+  const navigate = useNavigate();
 
-function Order() {
-  const [products, setProducts] = useState(initialProducts);
+  // Load cart items from localStorage
+  const [products, setProducts] = useState(() => {
+    try {
+      const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+      return savedCart.map(item => ({
+        id: item.id,
+        name: item.title || item.name,
+        price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace('$', '')) || 0,
+        image: item.image || fallbackImg,
+        quantity: item.quantity || 1
+      }));
+    } catch {
+      return [];
+    }
+  });
+
   const [delivery, setDelivery] = useState("deliver"); // "deliver" | "pickup"
 
   const [form, setForm] = useState({
@@ -44,6 +36,16 @@ function Order() {
     expiry: "",
     cvc: "",
   });
+
+  // Keep localStorage cart synchronized when quantities or items change
+  useEffect(() => {
+    try {
+      localStorage.setItem("cart", JSON.stringify(products));
+      window.dispatchEvent(new Event("storage"));
+    } catch (err) {
+      console.error("Failed to update cart in localStorage", err);
+    }
+  }, [products]);
 
   /* ----- Totals ----- */
   const subtotal = products.reduce(
@@ -106,11 +108,17 @@ function Order() {
       return;
     }
 
+    // Clear cart upon successful order submission
+    localStorage.removeItem("cart");
+    window.dispatchEvent(new Event("storage"));
+
     alert(
-      `Order placed!\nName: ${form.firstName} ${form.lastName}\nMethod: ${
+      `Order placed successfully!\nName: ${form.firstName} ${form.lastName}\nMethod: ${
         delivery === "deliver" ? "Delivery" : "Pick up"
       }\nTotal: $${total.toFixed(2)}`
     );
+
+    navigate("/");
   }
 
   return (
@@ -302,7 +310,7 @@ function Order() {
 
             {products.map((product) => (
               <div className="summary-item" key={product.id}>
-                <img src={product.image} alt={product.name} />
+                <img src={product.image || fallbackImg} alt={product.name} />
 
                 <div className="summary-item-info">
                   <p className="summary-item-name">{product.name}</p>
@@ -345,5 +353,3 @@ function Order() {
     </div>
   );
 }
-
-export default Order;

@@ -1,6 +1,6 @@
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import accountsData from "../../data/cherry-cheek-JSON-Data/accounts.json";
+import accountsData from "../../data/accounts.json";
 import "../../App.css";
 import "./Customer.css";
 
