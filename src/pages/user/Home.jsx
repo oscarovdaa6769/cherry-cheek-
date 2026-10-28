@@ -1,30 +1,102 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
-import productsData from '../../data/products.json';
+import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
+import categoriesData from '../../data/cherry-cheek-JSON-Data/categories.json';
 import '../../App.css';
 import './Home.css';
 import Hero from '../../components/layout/Hero';
 
+/* Category Lookup Map */
+const categoryMap = categoriesData.reduce((acc, cat) => {
+  acc[cat.id] = cat.name;
+  return acc;
+}, {});
+
+/* Default Placeholder Image */
+const DEFAULT_IMAGE = "src/assets/images/fallback.jpg";
+
 /* ---------- Product Card Component ---------- */
 function HomeProductCard({ id, image, category, name, price, rating = 5 }) {
-  const [added, setAdded] = useState(false);
   const navigate = useNavigate();
+
+  // Initialize wishlist state from localStorage
+  const [isLiked, setIsLiked] = useState(() => {
+    try {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      return wishlist.some((item) => (typeof item === 'object' ? item.id === id : item === id));
+    } catch {
+      return false;
+    }
+  });
+
+  // Initialize cart state from localStorage
+  const [added, setAdded] = useState(() => {
+    try {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      return cart.some((item) => item.id === id);
+    } catch {
+      return false;
+    }
+  });
+
+  const handleWishlistClick = (e) => {
+    e.stopPropagation();
+    try {
+      const wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+      let updatedWishlist;
+      if (isLiked) {
+        updatedWishlist = wishlist.filter((item) => (typeof item === 'object' ? item.id !== id : item !== id));
+      } else {
+        updatedWishlist = [...wishlist, id];
+      }
+      localStorage.setItem("wishlist", JSON.stringify(updatedWishlist));
+      setIsLiked(!isLiked);
+      window.dispatchEvent(new Event("storage"));
+    } catch (error) {
+      console.error("Error updating wishlist", error);
+    }
+  };
+
+  const handleCartClick = (e) => {
+    e.stopPropagation();
+    try {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      let updatedCart;
+      if (added) {
+        updatedCart = cart.filter((item) => item.id !== id);
+        setAdded(false);
+      } else {
+        const existingIndex = cart.findIndex((item) => item.id === id);
+        if (existingIndex >= 0) {
+          cart[existingIndex].quantity = (cart[existingIndex].quantity || 1) + 1;
+          updatedCart = [...cart];
+        } else {
+          updatedCart = [...cart, { id, image, category, title: name, price, quantity: 1, rating }];
+        }
+        setAdded(true);
+      }
+      localStorage.setItem("cart", JSON.stringify(updatedCart));
+      window.dispatchEvent(new Event("storage"));
+    } catch (error) {
+      console.error("Error updating cart", error);
+    }
+  };
+
+  const formattedPrice = typeof price === 'number' ? `$${price.toFixed(2)}` : price;
 
   return (
     <article className="home-card" onClick={() => navigate(`/product-detail?id=${id}`)}>
       <div className="home-card__img-box">
-        <img className="home-card__img" src={image} alt={name} loading="lazy" />
+        <img className="home-card__img" src={image || DEFAULT_IMAGE} alt={name} loading="lazy" />
         <button 
           type="button" 
           className="home-card__heart"
-          onClick={(e) => {
-            e.stopPropagation();
-            // Wishlist toggle handler can go here
-          }}
+          onClick={handleWishlistClick}
           aria-label="Save to wishlist"
+          style={{ color: isLiked ? "var(--error-color)" : undefined }}
         >
-          <Icon icon="solar:heart-linear" />
+          <Icon icon={isLiked ? "solar:heart-bold" : "solar:heart-linear"} />
         </button>
       </div>
       <div className="home-card__body">
@@ -42,14 +114,11 @@ function HomeProductCard({ id, image, category, name, price, rating = 5 }) {
         </div>
 
         <div className="home-card__footer">
-          <span className="home-card__price">{price}</span>
+          <span className="home-card__price">{formattedPrice}</span>
           <button
             type="button"
             className={`home-card__add ${added ? "is-added" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
-              setAdded(!added);
-            }}
+            onClick={handleCartClick}
             aria-label={`Add ${name} to cart`}
           >
             <Icon icon={added ? "solar:check-read-linear" : "solar:add-circle-bold"} />
@@ -60,7 +129,7 @@ function HomeProductCard({ id, image, category, name, price, rating = 5 }) {
   );
 }
 
-/* ---------- Data ---------- */
+/* ---------- Static Data ---------- */
 const features = [
   { icon: "solar:leaf-bold-duotone", label: "100% Natural" },
   { icon: "solar:shield-user-bold-duotone", label: "Safe & Gentle" },
@@ -70,7 +139,7 @@ const features = [
 ];
 
 const homeProducts = productsData.slice(0, 8);
-const bestSellers = productsData.filter(p => p.prodRev && p.prodRev.rating === 5).slice(0, 3);
+const bestSellers = productsData.filter(p => p.categoryId === 1 || p.categoryId === 2).slice(0, 3);
 
 const quotes = [
   {
@@ -143,11 +212,11 @@ export default function Home() {
             <HomeProductCard 
               key={p.id} 
               id={p.id}
-              image={p.image}
-              category={p.prodCate}
-              name={p.prodName}
-              price={p.prodPrice}
-              rating={p.prodRev?.rating || 5}
+              image={p.image || DEFAULT_IMAGE}
+              category={categoryMap[p.categoryId] || "Skincare"}
+              name={p.name}
+              price={p.price}
+              rating={5}
             />
           ))}
         </div>
@@ -156,12 +225,12 @@ export default function Home() {
       {/* Article Row 1 */}
       <section className="home-feature container">
         <div className="home-feature__media">
-          <img src={productsData[8]?.image || productsData[0].image} alt="Cosmetic products" loading="lazy" />
+          <img src={productsData[1]?.image || DEFAULT_IMAGE} alt="Cosmetic products" loading="lazy" />
         </div>
         <div className="home-feature__text">
           <span className="feature-eyebrow">Expert Skincare Guide</span>
-          <h3>5 things to look for before you buy argan oil</h3>
-          <p>Learn how to identify pure, cold-pressed oils that deeply hydrate without clogging your pores.</p>
+          <h3>5 things to look for before you buy vitamin C serum</h3>
+          <p>Learn how to identify pure, antioxidant-rich serums that deeply hydrate without irritating sensitive skin.</p>
           <button type="button" className="feature-read-btn" onClick={() => navigate('/products')}>Read Article</button>
         </div>
       </section>
@@ -169,29 +238,29 @@ export default function Home() {
       {/* Article Row 2 */}
       <section className="home-feature home-feature--reverse container">
         <div className="home-feature__media">
-          <img src={productsData[9]?.image || productsData[1].image} alt="Cosmetic products" loading="lazy" />
+          <img src={productsData[2]?.image || DEFAULT_IMAGE} alt="Cosmetic products" loading="lazy" />
         </div>
         <div className="home-feature__text">
           <span className="feature-eyebrow">Sacred Formulas</span>
-          <h3>Beauty rituals came together in one sacred serum.</h3>
-          <p>Combining ancient botanical extracts with modern dermatological science for ultimate radiance.</p>
-          <button type="button" className="feature-read-btn" onClick={() => navigate('/products')}>Discover Serum</button>
+          <h3>Beauty rituals came together in one daily sunscreen.</h3>
+          <p>Combining botanical skin care with lightweight broad spectrum SPF 50 protection for natural glow.</p>
+          <button type="button" className="feature-read-btn" onClick={() => navigate('/products')}>Discover Sunscreen</button>
         </div>
       </section>
 
       {/* Best Sellers */}
       <section className="home-section container">
-        <h2 className="home-section__title">Best Seller Serums</h2>
+        <h2 className="home-section__title">Best Seller Skincare</h2>
         <div className="home-grid home-grid--3">
           {bestSellers.map((p) => (
             <HomeProductCard 
               key={p.id} 
               id={p.id}
-              image={p.image}
-              category={p.prodCate}
-              name={p.prodName}
-              price={p.prodPrice}
-              rating={p.prodRev?.rating || 5}
+              image={p.image || DEFAULT_IMAGE}
+              category={categoryMap[p.categoryId] || "Skincare"}
+              name={p.name}
+              price={p.price}
+              rating={5}
             />
           ))}
         </div>
@@ -225,7 +294,7 @@ export default function Home() {
       {/* About Us Banner */}
       <section className="home-about container">
         <div className="home-about__media">
-          <img src={productsData[2]?.image || productsData[0].image} alt="Natural beauty skincare" loading="lazy" />
+          <img src={productsData[3]?.image || DEFAULT_IMAGE} alt="Natural beauty skincare" loading="lazy" />
         </div>
         <div className="home-about__text">
           <p className="home-about__eyebrow">Our Philosophy</p>

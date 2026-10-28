@@ -1,26 +1,33 @@
 import { Routes, Route } from "react-router-dom";
+import { useState, useEffect } from 'react';
 import ProtectedRoute from "./routes/ProtectedRoute";
-import AdminLayout from "./layouts/AdminLayout";
-import UserLayout from "./layouts/UserLayout"
+import "./App.css"
 
+// Admin
+import AdminLayout from "./layouts/AdminLayout";
 import AdminDashboard from "./pages/admin/Dashboard";
+import AdminCustomer from "./pages/admin/Customer";
+import AdminOrder from "./pages/admin/Order"
+import AdminSetting from "./pages/admin/AdminSettings";
+
+// User
+import UserLayout from "./layouts/UserLayout"
 import Home from "./pages/user/Home";
 import Product from "./pages/user/Products";
 import ProductDetail from "./pages/user/ProductDetail";
 import Profile from "./pages/user/Profile"
-import Login from "./pages/Login";
-import { useState, useEffect } from 'react';
-
-import "./App.css"
-import Wishlist from "./pages/user/Wishlist";
 import OrderHistory from "./pages/user/OrderHistory";
+import Wishlist from "./pages/user/Wishlist";
 import Settings from "./pages/user/Setting";
-import Register from "./pages/Register";
-import AdminSettings from "./pages/admin/AdminSettings";
 import About from "./pages/user/About";
 import Contact from './pages/user/Contact'
 import Cart from "./pages/user/Cart";
 import Checkout from './pages/user/Checkout'
+
+// login & register
+import Register from "./pages/Register";
+import Login from "./pages/Login";
+
 
 
 function App() {
@@ -86,7 +93,9 @@ function App() {
             <Route element={<ProtectedRoute user={user} allowedRole="admin" />}>
                 <Route element={<AdminLayout handleLogout={handleLogout}/>}>
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
-                    <Route path="/admin/settings" element={<AdminSettings />} />
+                    <Route path="/admin/customers" element={<AdminCustomer />} />
+                    <Route path="/admin/orders" element={<AdminOrder />} />
+                    <Route path="/admin/settings" element={<AdminSetting />} />
                 </Route>
             </Route>
 

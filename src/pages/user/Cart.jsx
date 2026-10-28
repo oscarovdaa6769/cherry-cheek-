@@ -1,14 +1,21 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Button from '../../components/common/Button';
+import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
+import categoriesData from '../../data/cherry-cheek-JSON-Data/carts.json';
 import './Cart.css';
 import '../../App.css';
+
+const categoryMap = categoriesData.reduce((acc, cat) => {
+    acc[cat.id] = cat.name;
+    return acc;
+}, {});
 
 export default function Cart() {
     const navigate = useNavigate();
 
-    // Initial cart load from localStorage
+    // Initial cart load from localStorage, falling back or linking with product dataset if needed
     const [cartItems, setCartItems] = useState(() => {
         try {
             const savedCart = localStorage.getItem('cart');
@@ -21,6 +28,7 @@ export default function Cart() {
     // Save to localStorage whenever cart changes
     useEffect(() => {
         localStorage.setItem('cart', JSON.stringify(cartItems));
+        window.dispatchEvent(new Event('storage'));
     }, [cartItems]);
 
     // Update Item Quantity
@@ -46,9 +54,11 @@ export default function Cart() {
         setCartItems([]);
     };
 
-    // Calculate Totals
+    // Calculate Totals using numerical prices
     const subtotal = cartItems.reduce((acc, item) => {
-        const priceNum = parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
+        const priceNum = typeof item.price === 'number' 
+            ? item.price 
+            : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
         return acc + priceNum * item.quantity;
     }, 0);
 
@@ -102,21 +112,29 @@ export default function Cart() {
 
                             <div className="cart-items-list">
                                 {cartItems.map((item) => {
-                                    const priceNum = parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
+                                    const priceNum = typeof item.price === 'number' 
+                                        ? item.price 
+                                        : parseFloat(String(item.price).replace(/[^0-9.]/g, '')) || 0;
                                     
+                                    // Match category name or fallback to item data
+                                    const displayCategory = item.category || categoryMap[item.categoryId] || "Skincare";
+                                    const displayName = item.title || item.name || "Cosmetic Product";
+                                    const displayImage = item.image || "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=200&fit=crop";
+
                                     return (
                                         <div key={item.id} className="cart-item-card">
                                             <div 
                                                 className="cart-item-img-box"
                                                 onClick={() => navigate(`/product-detail?id=${item.id}`)}
+                                                style={{ cursor: 'pointer' }}
                                             >
-                                                <img src={item.image} alt={item.title || item.prodName} />
+                                                <img src={displayImage} alt={displayName} />
                                             </div>
 
                                             <div className="cart-item-info">
-                                                <span className="cart-item-cate">{item.category || item.prodCate}</span>
-                                                <h3 className="cart-item-title">{item.title || item.prodName}</h3>
-                                                <span className="cart-item-unit-price">{item.price}</span>
+                                                <span className="cart-item-cate">{displayCategory}</span>
+                                                <h3 className="cart-item-title">{displayName}</h3>
+                                                <span className="cart-item-unit-price">${priceNum.toFixed(2)}</span>
                                             </div>
 
                                             {/* Quantity Controls */}

@@ -2,10 +2,36 @@ import { useState } from 'react';
 import { Icon } from "@iconify/react";
 import Button from '../../components/common/Button';
 import './OrderHistory.css';
-import '../../App.css'
+import '../../App.css';
 import { useNavigate } from 'react-router-dom';
+import invoicesData from '../../data/cherry-cheek-JSON-Data/invoices.json';
+import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
 
-export default function OrderHistory({ setCart}) {
+// Map product lookup for order items
+const productMap = productsData.reduce((acc, p) => {
+    acc[p.id] = p;
+    return acc;
+}, {});
+
+// Generate initialOrders dynamically from invoices data[cite: 17, 18]
+const initialOrders = invoicesData.map(inv => ({
+    id: inv.invoiceNumber,
+    date: new Date(inv.createdAt).toLocaleDateString(),
+    status: inv.status,
+    total: `$${inv.total.toFixed(2)}`,
+    items: inv.items.map(item => {
+        const prod = productMap[item.productId] || {};
+        return {
+            name: prod.name || "Cosmetic Product",
+            size: "Standard",
+            qty: item.quantity,
+            price: `$${item.unitPrice.toFixed(2)}`,
+            img: prod.image || "src/assets/images/fallback.jpg"
+        };
+    })
+}));
+
+export default function OrderHistory({ setCart }) {
     const [orders] = useState(initialOrders);
     const [notification, setNotification] = useState('');
     const navigate = useNavigate();
@@ -29,7 +55,7 @@ export default function OrderHistory({ setCart}) {
                     </div>
                 )}
                 <div className="orders-header">
-                    <Button name="Back" />
+                    <Button name="Back" onClick={() => navigate(-1)} />
                     <h1 className="orders-title">Order History</h1>
                     <span className="orders-count">{orders.length} Total Orders</span>
                 </div>

@@ -228,7 +228,6 @@
 }
 
 .about-services__grid {
-  margin-top: 36px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;

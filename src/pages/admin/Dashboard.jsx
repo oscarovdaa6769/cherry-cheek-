@@ -1,61 +1,49 @@
-
 import { useState } from "react";
-import {
-  Search,
-  Settings,
-  Mail,
-  Bell,
-  Package,
-  TrendingUp,
-  PlusCircle,
-  Pencil,
-  Trash2,
-  X,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { Icon } from "@iconify/react";
+import productsData from "../../data/cherry-cheek-JSON-Data/products.json";
+import categoriesData from "../../data/cherry-cheek-JSON-Data/categories.json";
+import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Dashboard.css";
-
-const initialProducts = [
-  { id: 1, name: "Tiki Tiki", category: "Skincare", price: 99.99, stock: 199 },
-  { id: 2, name: "Rose Glow", category: "Serum", price: 24.99, stock: 85 },
-  { id: 3, name: "Daily Moisturizer", category: "Skincare", price: 35.00, stock: 120 },
-  { id: 4, name: "Gentle Cleanser", category: "Cleanser", price: 18.99, stock: 45 },
-  { id: 5, name: "Hydrating Cream", category: "Skincare", price: 29.99, stock: 95 },
-  { id: 6, name: "Vitamin C Serum", category: "Serum", price: 39.99, stock: 25 },
-  { id: 7, name: "Daily Sunscreen", category: "Skincare", price: 21.50, stock: 76 },
-];
+import "../../App.css";
 
 const emptyForm = {
+  sku: "",
   name: "",
-  category: "Skincare",
+  categoryId: categoriesData[0]?.id || 1,
   price: "",
-  stock: "",
+  stockQuantity: "",
 };
 
-export default function App() {
-  const [products, setProducts] = useState(initialProducts);
+export default function AdminDashboard() {
+  const navigate = useNavigate();
+  const [products, setProducts] = useState(productsData);
+  const [categories] = useState(categoriesData);
   const [search, setSearch] = useState("");
-  const [category, setCategory] = useState("All Category");
+  const [selectedCategory, setSelectedCategory] = useState("All");
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(emptyForm);
+  const [viewingProduct, setViewingProduct] = useState(null);
 
   const totalStock = products.reduce(
-    (sum, product) => sum + Number(product.stock),
+    (sum, product) => sum + Number(product.stockQuantity || 0),
     0
   );
 
-  const lowStock = products.filter(
-    (product) => Number(product.stock) < 50
+  const lowStockCount = products.filter(
+    (product) => Number(product.stockQuantity || 0) < 15
   ).length;
 
   const filteredProducts = products.filter((product) => {
-    const matchesSearch = product.name
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const matchesSearch =
+      product.name.toLowerCase().includes(search.toLowerCase()) ||
+      product.sku.toLowerCase().includes(search.toLowerCase());
 
     const matchesCategory =
-      category === "All Category" || product.category === category;
+      selectedCategory === "All" ||
+      String(product.categoryId) === String(selectedCategory);
 
     return matchesSearch && matchesCategory;
   });
@@ -73,13 +61,10 @@ export default function App() {
   );
 
   const stats = [
-    { title: "Total Skincare", value: products.length },
-    { title: "Total Stock", value: totalStock.toLocaleString() },
-    {
-      title: "Categories",
-      value: new Set(products.map((product) => product.category)).size,
-    },
-    { title: "Low Stock", value: lowStock },
+    { title: "Total Skincare", value: products.length, icon: "solar:box-minimalistic-bold-duotone" },
+    { title: "Total Stock", value: totalStock.toLocaleString(), icon: "solar:archive-bold-duotone" },
+    { title: "Categories", value: categories.length, icon: "solar:widget-bold-duotone" },
+    { title: "Low Stock Items", value: lowStockCount, icon: "solar:danger-triangle-bold-duotone", isWarning: lowStockCount > 0 },
   ];
 
   function openAdd() {
@@ -91,22 +76,30 @@ export default function App() {
   function openEdit(product) {
     setEditingId(product.id);
     setForm({
+      sku: product.sku,
       name: product.name,
-      category: product.category,
+      categoryId: product.categoryId,
       price: product.price,
-      stock: product.stock,
+      stockQuantity: product.stockQuantity,
     });
     setModalOpen(true);
+  }
+
+  function openView(product) {
+    setViewingProduct(product);
   }
 
   function saveProduct(event) {
     event.preventDefault();
 
     const data = {
-      ...form,
+      sku: form.sku.trim().toUpperCase(),
       name: form.name.trim(),
+      categoryId: Number(form.categoryId),
+      brand: "Cherry Cheeks",
       price: Number(form.price),
-      stock: Number(form.stock),
+      stockQuantity: Number(form.stockQuantity),
+      active: true,
     };
 
     if (editingId !== null) {
@@ -129,7 +122,7 @@ export default function App() {
   }
 
   function deleteProduct(id) {
-    if (window.confirm("Delete this product?")) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       setProducts((previous) =>
         previous.filter((product) => product.id !== id)
       );
@@ -142,185 +135,163 @@ export default function App() {
   }
 
   return (
-    <main className="dashboard">
-      {/* TOP NAVBAR ONLY — NO SIDEBAR */}
-      <header className="topbar">
-        <div className="topbar-search">
-          <Search size={22} />
-          <input
-            value={search}
-            onChange={(event) => updateSearch(event.target.value)}
-            placeholder="Search Here"
-            aria-label="Search products"
-          />
-          {search && (
-            <button
-              className="clear-search"
-              onClick={() => updateSearch("")}
-              aria-label="Clear search"
-            >
-              <X size={16} />
-            </button>
-          )}
-        </div>
-
-        <div className="topbar-actions">
-          <button className="icon-button" aria-label="Settings">
-            <Settings size={18} />
-          </button>
-          <button className="icon-button" aria-label="Messages">
-            <Mail size={18} />
-          </button>
-          <button className="icon-button" aria-label="Notifications">
-            <Bell size={18} />
-          </button>
-          <img
-            className="avatar"
-            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=faces"
-            alt="Admin profile"
-          />
-        </div>
-      </header>
+    <main className="admin-dashboard-page">
 
       {/* DASHBOARD CONTENT */}
-      <section className="content">
-        <div className="page-heading">
+      <section className="admin-dashboard-content">
+        <div className="admin-dashboard-page-heading">
           <div>
-            <p className="eyebrow">CHERRY CHEEK / INVENTORY</p>
-            <h1>Dashboard</h1>
-            <p className="page-description">
-              Manage your skincare products and inventory.
+            <span className="admin-dashboard-eyebrow">CHERRY CHEEK ADMIN</span>
+            <h1 className="admin-dashboard-title">Inventory Dashboard</h1>
+            <p className="admin-dashboard-description">
+              Manage your skincare catalog, monitor stock levels, and update product pricing.
             </p>
           </div>
+
+          <button type="button" className="admin-primary-btn" onClick={openAdd}>
+            <Icon icon="solar:add-circle-bold" />
+            <span>New Product</span>
+          </button>
         </div>
 
-        {/* STATISTICS */}
-        <section className="stats-grid">
+        {/* STATISTICS GRID */}
+        <section className="admin-stats-grid">
           {stats.map((stat) => (
-            <article className="stat-card" key={stat.title}>
-              <div className="stat-heading">
-                <span>{stat.title}</span>
-                <div className="stat-icon">
-                  <Package size={18} />
+            <article className={`admin-stat-card ${stat.isWarning ? 'warning-card' : ''}`} key={stat.title}>
+              <div className="admin-stat-header">
+                <span className="stat-label">{stat.title}</span>
+                <div className="stat-icon-wrapper">
+                  <Icon icon={stat.icon} />
                 </div>
               </div>
 
-              <strong>{stat.value}</strong>
+              <strong className="stat-value">{stat.value}</strong>
 
-              <div className="stat-change">
-                <span className="trend-icon">
-                  <TrendingUp size={14} />
-                </span>
-                <span>+ 10 This Week</span>
+              <div className="stat-trend">
+                <Icon icon="solar:trending-up-linear" />
+                <span>Updated in real-time</span>
               </div>
             </article>
           ))}
         </section>
 
-        {/* FILTERS AND ACTIONS */}
-        <section className="toolbar">
-          <label className="category-filter">
-            <select
-              value={category}
-              onChange={(event) => {
-                setCategory(event.target.value);
-                setPage(1);
-              }}
-              aria-label="Filter by category"
-            >
-              <option>All Category</option>
-              <option>Skincare</option>
-              <option>Serum</option>
-              <option>Cleanser</option>
-            </select>
-            <span>⌄</span>
-          </label>
-
-          <div className="toolbar-right">
-            <div className="table-search">
-              <Search size={21} />
-              <input
-                value={search}
-                onChange={(event) => updateSearch(event.target.value)}
-                placeholder="Search Here"
-                aria-label="Search table"
-              />
+        {/* TOOLBAR */}
+        <section className="admin-toolbar">
+          <div className="filter-group">
+            <div className="select-wrapper">
+              <Icon icon="solar:filter-bold-duotone" className="filter-icon" />
+              <select
+                value={selectedCategory}
+                onChange={(event) => {
+                  setSelectedCategory(event.target.value);
+                  setPage(1);
+                }}
+                aria-label="Filter by category"
+              >
+                <option value="All">All Categories</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                ))}
+              </select>
+              <Icon icon="solar:alt-arrow-down-linear" className="arrow-icon" />
             </div>
+          </div>
 
-            <button className="primary-btn" onClick={openAdd}>
-              <PlusCircle size={19} />
-              <span>New Product</span>
-            </button>
+          <div className="admin-table-search">
+            <Icon icon="solar:magnifer-linear" />
+            <input
+              value={search}
+              onChange={(event) => updateSearch(event.target.value)}
+              placeholder="Search by name or SKU..."
+              aria-label="Search table"
+            />
           </div>
         </section>
 
-        {/* PRODUCT TABLE */}
-        <section className="table-card">
+        {/* PRODUCT TABLE CARD */}
+        <section className="admin-table-card">
           <div className="table-scroll">
-            <table>
+            <table className="admin-table">
               <thead>
                 <tr>
-                  <th>image</th>
-                  <th>name</th>
-                  <th>category</th>
-                  <th>price</th>
-                  <th>in stock</th>
-                  <th>action</th>
+                  <th>SKU & Product</th>
+                  <th>Category</th>
+                  <th>Price</th>
+                  <th>Stock Status</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
 
               <tbody>
-                {visibleProducts.map((product, index) => (
-                  <tr key={product.id}>
-                    <td>
-                      <div className="product-image">
-                        <img
-                          src={`https://images.unsplash.com/photo-${
-                            index % 2 === 0
-                              ? "1608248543803-ba4f8c70ae0b"
-                              : "1601049541289-9b1b7bbbfe19"
-                          }?w=100&h=100&fit=crop`}
-                          alt={product.name}
-                        />
-                      </div>
-                    </td>
-                    <td>{product.name}</td>
-                    <td>{product.category}</td>
-                    <td>${Number(product.price).toFixed(2)}</td>
-                    <td>
-                      <span
-                        className={
-                          product.stock < 50 ? "low-stock" : ""
-                        }
-                      >
-                        {product.stock}
-                      </span>
-                    </td>
-                    <td>
-                      <div className="row-actions">
-                        <button
-                          className="action-btn edit-btn"
-                          onClick={() => openEdit(product)}
-                          aria-label={`Edit ${product.name}`}
-                        >
-                          <Pencil size={16} />
-                        </button>
-                        <button
-                          className="action-btn delete-btn"
-                          onClick={() => deleteProduct(product.id)}
-                          aria-label={`Delete ${product.name}`}
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {visibleProducts.map((product, index) => {
+                  const catObj = categories.find((c) => c.id === product.categoryId);
+                  const isLow = Number(product.stockQuantity) < 15;
+                  return (
+                    <tr key={product.id}>
+                      <td>
+                        <div className="product-cell">
+                          <img
+                            className="product-thumb"
+                            src={product.image || fallbackImg}
+                            alt={product.name}
+                          />
+                          <div>
+                            <span className="product-sku" style={{ fontSize: '11px', color: 'var(--description-color)', display: 'block' }}>
+                              {product.sku}
+                            </span>
+                            <span className="product-cell-name">{product.name}</span>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <span className="category-tag">{catObj ? catObj.name : "Skincare"}</span>
+                      </td>
+                      <td className="price-cell">${Number(product.price).toFixed(2)}</td>
+                      <td>
+                        <span className={`stock-badge ${isLow ? 'low-stock' : 'in-stock'}`}>
+                          <Icon icon={isLow ? "solar:danger-circle-bold" : "solar:check-circle-bold"} />
+                          {product.stockQuantity} units
+                        </span>
+                      </td>
+                      <td>
+                        <td>
+                          <div className="row-actions">
+                            <button
+                              type="button"
+                              className="action-btn view-btn"
+                              onClick={() => openView(product)}
+                              aria-label={`View ${product.name}`}
+                            >
+                              <Icon icon="solar:eye-bold" />
+                            </button>
+                            <button
+                              type="button"
+                              className="action-btn edit-btn"
+                              onClick={() => openEdit(product)}
+                              aria-label={`Edit ${product.name}`}
+                            >
+                              <Icon icon="solar:pen-bold" />
+                            </button>
+                            <button
+                              type="button"
+                              className="action-btn delete-btn"
+                              onClick={() => deleteProduct(product.id)}
+                              aria-label={`Delete ${product.name}`}
+                            >
+                              <Icon icon="solar:trash-bin-trash-bold" />
+                            </button>
+                          </div>
+                        </td>
+                      </td>
+                    </tr>
+                  );
+                })}
 
                 {visibleProducts.length === 0 && (
                   <tr>
-                    <td colSpan="6" className="empty-state">
-                      No products found.
+                    <td colSpan="5" className="admin-empty-state">
+                      <Icon icon="solar:box-minimalistic-linear" className="empty-icon" />
+                      <p>No products match your search or filter criteria.</p>
                     </td>
                   </tr>
                 )}
@@ -328,89 +299,105 @@ export default function App() {
             </table>
           </div>
 
-          <footer className="pagination">
+          <footer className="admin-pagination">
             <button
+              type="button"
+              className="page-btn"
               disabled={currentPage === 1}
               onClick={() => setPage((value) => Math.max(1, value - 1))}
             >
-              previous
+              <Icon icon="solar:alt-arrow-left-linear" />
+              <span>Previous</span>
             </button>
 
-            <span>
-              {filteredProducts.length === 0
-                ? "0 products"
-                : `${currentPage} of ${totalPages}`}
+            <span className="page-info">
+              Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
             </span>
 
             <button
+              type="button"
+              className="page-btn"
               disabled={currentPage >= totalPages}
               onClick={() =>
                 setPage((value) => Math.min(totalPages, value + 1))
               }
             >
-              next
+              <span>Next</span>
+              <Icon icon="solar:alt-arrow-right-linear" />
             </button>
           </footer>
         </section>
-
-       
       </section>
 
       {/* ADD / EDIT PRODUCT MODAL */}
       {modalOpen && (
         <div
-          className="modal-overlay"
+          className="admin-modal-overlay"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) {
               setModalOpen(false);
             }
           }}
         >
-          <form className="product-modal" onSubmit={saveProduct}>
-            <div className="modal-header">
+          <form className="admin-modal" onSubmit={saveProduct}>
+            <div className="admin-modal-header">
               <div>
-                <span className="eyebrow">PRODUCT MANAGEMENT</span>
+                <span className="admin-eyebrow">PRODUCT EDITOR</span>
                 <h2>{editingId !== null ? "Edit Product" : "New Product"}</h2>
               </div>
               <button
                 type="button"
-                className="icon-button"
+                className="admin-close-btn"
                 onClick={() => setModalOpen(false)}
                 aria-label="Close modal"
               >
-                <X size={19} />
+                <Icon icon="solar:close-circle-bold" />
               </button>
             </div>
 
-            <label>
-              Product Name
+            <label className="admin-modal-field">
+              <span>SKU Code</span>
+              <input
+                required
+                value={form.sku}
+                onChange={(event) =>
+                  setForm({ ...form, sku: event.target.value })
+                }
+                placeholder="e.g. SK-101"
+              />
+            </label>
+
+            <label className="admin-modal-field">
+              <span>Product Name</span>
               <input
                 required
                 value={form.name}
                 onChange={(event) =>
                   setForm({ ...form, name: event.target.value })
                 }
-                placeholder="Enter product name"
+                placeholder="e.g. Gentle Face Cleanser"
               />
             </label>
 
-            <label>
-              Category
+            <label className="admin-modal-field">
+              <span>Category</span>
               <select
-                value={form.category}
+                value={form.categoryId}
                 onChange={(event) =>
-                  setForm({ ...form, category: event.target.value })
+                  setForm({ ...form, categoryId: event.target.value })
                 }
               >
-                <option>Skincare</option>
-                <option>Serum</option>
-                <option>Cleanser</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
+                ))}
               </select>
             </label>
 
-            <div className="form-row">
-              <label>
-                Price ($)
+            <div className="admin-form-row">
+              <label className="admin-modal-field">
+                <span>Price ($)</span>
                 <input
                   required
                   type="number"
@@ -424,35 +411,104 @@ export default function App() {
                 />
               </label>
 
-              <label>
-                Stock
+              <label className="admin-modal-field">
+                <span>Stock Quantity</span>
                 <input
                   required
                   type="number"
                   min="0"
                   step="1"
-                  value={form.stock}
+                  value={form.stockQuantity}
                   onChange={(event) =>
-                    setForm({ ...form, stock: event.target.value })
+                    setForm({ ...form, stockQuantity: event.target.value })
                   }
                   placeholder="100"
                 />
               </label>
             </div>
 
-            <div className="modal-actions">
+            <div className="admin-modal-actions">
               <button
                 type="button"
-                className="cancel-btn"
+                className="admin-cancel-btn"
                 onClick={() => setModalOpen(false)}
               >
                 Cancel
               </button>
-              <button type="submit" className="primary-btn">
-                {editingId !== null ? "Save Changes" : "Add Product"}
+              <button type="submit" className="admin-primary-btn">
+                <span>{editingId !== null ? "Save Changes" : "Add Product"}</span>
               </button>
             </div>
           </form>
+        </div>
+      )}
+      {/* VIEW PRODUCT MODAL */}
+      {viewingProduct && (
+        <div
+          className="admin-modal-overlay"
+          onMouseDown={(event) => {
+            if (event.target === event.currentTarget) {
+              setViewingProduct(null);
+            }
+          }}
+        >
+          <div className="admin-modal">
+            <div className="admin-modal-header">
+              <div>
+                <span className="admin-eyebrow">PRODUCT DETAILS</span>
+                <h2>{viewingProduct.name}</h2>
+              </div>
+              <button
+                type="button"
+                className="admin-close-btn"
+                onClick={() => setViewingProduct(null)}
+                aria-label="Close modal"
+              >
+                <Icon icon="solar:close-circle-bold" />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+              <img
+                src={viewingProduct.image || fallbackImg}
+                alt={viewingProduct.name}
+                style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
+              />
+              <div>
+                <span style={{ fontSize: '12px', color: 'var(--description-color)', display: 'block' }}>SKU: {viewingProduct.sku}</span>
+                <strong style={{ fontSize: '18px', color: 'var(--primary-color)' }}>${Number(viewingProduct.price).toFixed(2)}</strong>
+              </div>
+            </div>
+
+            <div className="admin-modal-field">
+              <span>Category</span>
+              <input
+                readOnly
+                value={categories.find(c => c.id === viewingProduct.categoryId)?.name || "Skincare"}
+              />
+            </div>
+
+            <div className="admin-form-row">
+              <div className="admin-modal-field">
+                <span>Brand</span>
+                <input readOnly value={viewingProduct.brand || "Cherry Cheeks"} />
+              </div>
+              <div className="admin-modal-field">
+                <span>Stock Quantity</span>
+                <input readOnly value={`${viewingProduct.stockQuantity} units`} />
+              </div>
+            </div>
+
+            <div className="admin-modal-actions">
+              <button
+                type="button"
+                className="admin-primary-btn"
+                onClick={() => setViewingProduct(null)}
+              >
+                Done
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </main>

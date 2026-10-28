@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import accountsData from "../data/cherry-cheek-JSON-Data/accounts.json";
 import "./Login.css";
 import "../App.css";
 
@@ -17,24 +18,25 @@ export default function Login({ onLogin }) {
     const normalizedEmail = email.trim().toLowerCase();
     let loggedInUser = null;
 
-    // 1. Demo admin account
-    if (normalizedEmail === "admin@cherrycheek.com" && password === "admin123") {
+    // 1. Check accounts from accounts.json (Admin, Cashier, Customer)
+    const matchedAccount = (accountsData || []).find(
+      (acc) => acc.email.toLowerCase() === normalizedEmail && acc.active
+    );
+
+    if (matchedAccount) {
+      // Map ADMIN / CASHIER to admin role, and CUSTOMER to user role
+      const role =
+        matchedAccount.role === "ADMIN" || matchedAccount.role === "CASHIER"
+          ? "admin"
+          : "user";
+
       loggedInUser = {
-        name: "Admin",
-        email: normalizedEmail,
-        role: "admin",
+        name: matchedAccount.fullName,
+        email: matchedAccount.email,
+        role: role,
       };
-    }
-    // 2. Demo customer account
-    else if (normalizedEmail === "user@cherrycheek.com" && password === "user123") {
-      loggedInUser = {
-        name: "Customer",
-        email: normalizedEmail,
-        role: "user",
-      };
-    }
-    // 3. Check locally registered users
-    else {
+    } else {
+      // 2. Check locally registered users from localStorage
       const registeredUsers = JSON.parse(localStorage.getItem("registered_users")) || [];
       const foundUser = registeredUsers.find(
         (u) => u.email === normalizedEmail && u.password === password
@@ -61,7 +63,7 @@ export default function Login({ onLogin }) {
     if (loggedInUser.role === "admin") {
       navigate("/admin/dashboard", { replace: true });
     } else {
-      navigate("/profile", { replace: true });
+      navigate("/", { replace: true });
     }
   }
 
@@ -78,7 +80,7 @@ export default function Login({ onLogin }) {
             id="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="Enter your email"
+            placeholder="e.g. avery@example.com"
             autoComplete="username"
             required
           />
@@ -91,7 +93,7 @@ export default function Login({ onLogin }) {
             id="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
+            placeholder="Enter any password for demo accounts"
             autoComplete="current-password"
             required
           />

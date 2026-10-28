@@ -64,25 +64,29 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
 }
 
-/* Remove Icon Button */
+/* Improved Delete Icon Button with Solid Background & Shadow */
 .remove-btn {
-    background: none;
-    border: none;
-    color: var(--error-color);
-    font-size: 22px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    color: #dc2626; /* clear red color */
+    font-size: 18px;
     cursor: pointer;
     z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 6px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: background-color 0.2s ease, transform 0.2s ease, color 0.2s ease;
 }
 
 .remove-btn:hover {
-    color: var(--hover-error-color);
-    background-color: rgba(220, 38, 38, 0.08);
+    color: #ffffff;
+    background-color: #dc2626;
+    border-color: #dc2626;
+    transform: scale(1.08);
 }
 
 /* Image Frame */
@@ -205,76 +209,4 @@
 
 .browse-products-btn:hover {
     background-color: var(--hover-color);
-}
-
-/* Auth Guard Card (Guest State) */
-.auth-guard-card {
-    text-align: center;
-    padding: 48px 24px;
-    background-color: var(--card-color);
-    border: 1px solid var(--border-color);
-    border-radius: 16px;
-    max-width: 480px;
-    margin: 40px auto;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.auth-guard-icon-box {
-    width: 64px;
-    height: 64px;
-    background-color: var(--background-color);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-.auth-guard-icon {
-    font-size: 32px;
-    color: var(--primary-color);
-}
-
-.auth-guard-title {
-    font-size: var(--text-body-1);
-    color: var(--primary-color);
-    margin: 0 0 8px 0;
-    font-weight: 700;
-}
-
-.auth-guard-subtitle {
-    font-size: var(--text-body-4);
-    color: var(--description-color);
-    line-height: 1.5;
-    margin: 0 0 24px 0;
-    max-width: 380px;
-}
-
-.auth-guard-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--primary-color);
-    color: var(--card-color);
-    border: none;
-    border-radius: 30px;
-    padding: 12px 28px;
-    font-family: var(--font-sans);
-    font-size: var(--text-body-4);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.auth-guard-btn:hover {
-    background-color: var(--hover-color);
-    transform: translateY(-1px);
-}
-
-.btn-icon {
-    font-size: 18px;
 }

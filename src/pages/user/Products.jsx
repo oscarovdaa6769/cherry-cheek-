@@ -2,22 +2,28 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 import "./Products.css";
 import Card from "../../components/product/Card";
-import productsData from '../../data/products.json';
+import productsData from '../../data/cherry-cheek-JSON-Data/products.json';
+import categoriesData from '../../data/cherry-cheek-JSON-Data/categories.json';
 import '../../App.css';
 
 /* ---------- Data Mapping ---------- */
-const CATEGORIES = ["All", ...new Set(productsData.map(p => p.prodCate))];
+const CATEGORIES = ["All", ...categoriesData.map(c => c.name)];
+
+const categoryMap = categoriesData.reduce((acc, cat) => {
+  acc[cat.id] = cat.name;
+  return acc;
+}, {});
 
 const allProducts = productsData.map((p) => ({
   id: p.id,
-  image: p.image,
-  category: p.prodCate,
-  title: p.prodName,
-  price: p.prodPrice, 
-  oldPrice: p.prodOldPrice || null,
-  rating: p.rating || 5,
-  outOfStock: !p.inStock,
-  group: p.prodCate
+  image: p.image || "src/assets/images/fallback.jpg",
+  category: categoryMap[p.categoryId] || "Skincare",
+  title: p.name,
+  price: `$${Number(p.price).toFixed(2)}`,
+  oldPrice: null,
+  rating: 5,
+  outOfStock: p.stockQuantity <= 0,
+  group: categoryMap[p.categoryId] || "Skincare"
 }));
 
 const PRODUCTS_PER_PAGE = 8;
@@ -50,7 +56,6 @@ export const Product = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
-  /* ----- Search + category filtering ----- */
   const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
   const query = normalize(searchTerm);
   const isFiltering = query !== "" || activeCategory !== "All";
@@ -67,7 +72,6 @@ export const Product = () => {
     return matchesCategory && matchesSearch;
   });
 
-  /* ----- Pagination ----- */
   const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
   const paginatedFilteredProducts = filteredProducts.slice(
     (currentPage - 1) * PRODUCTS_PER_PAGE,
@@ -86,10 +90,6 @@ export const Product = () => {
   const goToPage = (page) => {
     setCurrentPage(page);
     window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const handleSearchSubmit = (e) => {
-    e.preventDefault();
   };
 
   const clearFilters = () => {
@@ -136,7 +136,7 @@ export const Product = () => {
             </div>
           </div>
 
-          <form className="search" onSubmit={handleSearchSubmit} role="search">
+          <form className="search" onSubmit={(e) => e.preventDefault()} role="search">
             <input
               type="text"
               placeholder="Find your favorite products..."
