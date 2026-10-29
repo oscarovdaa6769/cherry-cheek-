@@ -5,7 +5,7 @@ import "./Contact.css";
 import "../../App.css";
 
 const PLACEHOLDER =
-  "https://www.personalcarecouncil.org/wp-content/smush-webp/2025/03/AdobeStock_218950992-square-crop.jpeg.webp";
+  "src/assets/images/fallback.jpg";
 const journalImages = [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER];
 
 const contactDetails = [
@@ -54,15 +54,18 @@ function Contact() {
     <main className="contact-page">
       <div className="contact-container">
         
-        {/* Contact Hero */}
+        {/* Contact Hero - Aligned with other page headers */}
         <section className="contact-hero">
-          <span className="contact-eyebrow">We're Here For You</span>
-          <h1 className="contact-title">Contact Us</h1>
-          <p className="contact-description">A little care, a conversation away.</p>
-          <div className="contact-breadcrumb">
-            <Link to="/home">Home</Link>
-            <Icon icon="solar:alt-arrow-right-linear" />
-            <span>Contact</span>
+          <div className="contact-hero-left">
+            <h1 className="contact-title">Contact Us</h1>
+            <p className="contact-description">A little care, a conversation away.</p>
+          </div>
+          <div className="contact-hero-right">
+            <div className="contact-breadcrumb">
+              <Link to="/home">Home</Link>
+              <Icon icon="solar:alt-arrow-right-linear" />
+              <span>Contact</span>
+            </div>
           </div>
         </section>
 

@@ -1,14 +1,19 @@
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import './Footer.css';
-import LogoFooter from '../../assets/images/logo.png'
+import logoDark from '../../assets/images/logo2.png'
+import logoLight from '../../assets/images/logo.png'
+import { useEffect, useState } from "react";
 
 export default function Footer() {
+    const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
     return (
         <footer className="footer">
             <div className="footer-container">
                 <div className="footer-brand">
-                    <img src={LogoFooter} alt="" />
+                    <Link to="/">
+                        <img src={theme === 'dark' ? logoDark : logoLight} alt="Cherry Cheek" />
+                    </Link>
                     <p className="footer-description">
                         Your go-to destination for premium skincare and cosmetic products.
                     </p>

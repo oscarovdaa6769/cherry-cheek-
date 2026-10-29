@@ -2,8 +2,14 @@ import { Icon } from "@iconify/react";
 import logoImage from '../../assets/images/logo2.png';
 import miniLogoImage from '../../assets/images/mini-logo2.png'; // 1. Import mini logo
 import { NavLink } from "react-router-dom";
+import logoLight from '../../assets/images/logo2.png';
+import logoDark from '../../assets/images/logo.png';
+import miniLogoLight from '../../assets/images/mini-logo2.png';
+import miniLogoDark from '../../assets/images/mini-logo1.png';
+import { useEffect, useState } from "react";
 
 function Sidebar({ onLogout }) {
+    const [theme, setTheme] = useState(localStorage.getItem('app-theme') || 'light');
     const menuItems = [
         { icon: "solar:home-2-bold", label: "Dashboard", href: "/admin/dashboard"},
         { icon: "solar:cart-3-bold", label: "Orders", href: "/admin/orders"},
@@ -15,8 +21,8 @@ function Sidebar({ onLogout }) {
         <aside className="admin-sidebar">
             <div className="sidebar-brand">
                 {/* 2. Render both logos */}
-                <img src={logoImage} alt="brand logo" className="logo-full" />
-                <img src={miniLogoImage} alt="brand logo mini" className="logo-mini" />
+                <img src={theme === 'dark' ? logoDark : logoLight} alt="Cherry Cheek" />
+                <img src={theme === 'dark' ? miniLogoDark : miniLogoLight} alt="Cherry Cheek" className="logo-mini"/>
             </div>
             <nav className="sidebar-menu">
                 {menuItems.map((item) => (
