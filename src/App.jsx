@@ -6,17 +6,20 @@ import AddProduct from "./AddProduct";
 import Checkout from "./Checkout";
 
 
+
 function App() {
   return (
     <div className="container">
-      <Header />
-      <Hero />
-       <Dashboard/>
-       <AddProduct />
-        <Checkout/>
-      <Footer />
+      <Header/>
+      <Hero/>
+      <Dashboard/>
+      <AddProduct/>
+      <Checkout/>
+      <Footer/>
     </div>
   );
 }
 
 export default App;
+
+

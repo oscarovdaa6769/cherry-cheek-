@@ -73,16 +73,12 @@
 
 .newsletter-form button {
   border: none;
-  background: var(--footer-text);
+  background:#1D4533;;
   color: white;
   padding: 12px 20px;
   cursor: pointer;
   font-size: 12px;
   transition: background 0.3s ease;
-}
-
-.newsletter-form button:hover {
-  background: var(--footer-accent);
 }
 
 /* ===== MAIN FOOTER ===== */
