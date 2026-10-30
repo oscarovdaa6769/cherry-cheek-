@@ -1,0 +1,315 @@
+.product-detail-header {
+    padding-top: 40px;
+}
+
+.product-detail-section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+    align-items: start;
+    padding-top: 12px;
+}
+
+/* Back Button Component Container Overrides */
+.back-btn {
+    grid-column: 1 / -1;
+    background-color: var(--primary-color);
+    color: var(--card-color);
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-4);
+    width: fit-content;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: background-color 0.2s ease;
+}
+
+.back-btn:hover {
+    background-color: var(--hover-color);
+}
+
+/* Product Image Box */
+.product-detail-img {
+    width: 100%;
+    background-color: var(--card-color);
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1 / 1;
+    border: 1px solid var(--border-color);
+}
+
+.product-detail-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Product Content Panel */
+.product-detail-context {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.product-detail-category {
+    font-size: var(--text-small-1);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--description-color);
+    font-weight: 600;
+    font-style: italic;
+}
+
+.product-detail-name {
+    font-size: var(--text-header-4);
+    font-weight: 800;
+    color: var(--primary-color);
+    line-height: 1.1;
+    margin: 0;
+}
+
+/* Review Section */
+.product-detail-review {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.star-container {
+    display: flex;
+    gap: 4px;
+    color: #FFC107; /* Standard rating star color */
+}
+
+.review-count {
+    font-size: var(--text-body-4);
+    color: var(--description-color);
+}
+
+/* Pricing Wrapper */
+.product-price-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 4px;
+}
+
+.product-detail-price {
+    font-size: var(--text-body-2);
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.product-old-price {
+    font-size: var(--text-body-4);
+    color: var(--description-color);
+    text-decoration: line-through;
+}
+
+.discount-badge {
+    background-color: var(--primary-color);
+    color: var(--card-color);
+    font-size: var(--text-small-1);
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+/* Description */
+.product-description {
+    font-size: var(--text-body-4);
+    color: var(--description-color);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Size Selector */
+.product-size-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 6px;
+}
+
+.size-label {
+    font-size: var(--text-body-4);
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.size-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.size-btn {
+    background-color: var(--card-color);
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    border-radius: 8px;
+    font-family: var(--font-sans);
+    font-size: var(--text-body-4);
+    font-weight: 500;
+    color: var(--description-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.size-btn.active {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    border-color: var(--primary-color);
+    font-weight: 600;
+}
+
+/* Action Row (Quantity + Add to Cart + Wishlist) */
+.product-action-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.quantity-selector {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border-color);
+    border-radius: 30px;
+    padding: 12px 14px;
+    gap: 16px;
+    background-color: var(--card-color);
+}
+
+.quantity-selector button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--text-body-4);
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+}
+
+.quantity-selector span {
+    font-size: var(--text-body-4);
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.add-to-cart-btn {
+    flex: 1;
+    background-color: var(--primary-color);
+    color: var(--card-color);
+    border: none;
+    border-radius: 30px;
+    padding: 12px;
+    font-family: var(--font-sans);
+    font-size: var(--text-small-1);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.add-to-cart-btn:hover {
+    background-color: var(--hover-color);
+}
+
+.wishlist-btn {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: var(--text-body-3);
+    transition: all 0.2s ease;
+}
+
+.wishlist-btn:hover {
+    border-color: var(--primary-color);
+}
+
+/* Features Grid Box */
+.product-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background-color: var(--card-color);
+    padding: 16px 10px;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.feature-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.feature-card svg {
+    font-size: var(--text-body-2);
+    color: var(--primary-color);
+    font-size: 24px;
+}
+
+.feature-card span {
+    font-size: var(--text-small-2);
+    color: var(--description-color);
+    line-height: 1.2;
+}
+
+/* Accordion Detail Section */
+.product-accordion {
+    border-top: 1px solid var(--border-color);
+    margin-top: 10px;
+    padding-top: 16px;
+}
+
+.accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: var(--text-body-4);
+    color: var(--primary-color);
+    cursor: pointer;
+}
+
+.accordion-body {
+    font-size: var(--text-small-1);
+    color: var(--description-color);
+    line-height: 1.6;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+.wishlist-toast {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--card-color);
+    color: var(--primary-color);
+    border: 1px solid var(--border-color);
+    padding: 0.85rem 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}

@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Poppins&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
 
 :root {
     /* color */
     --primary-color: #1D4533;
-    --secondary-color: #F7EAE0;
-    --footer-color: #5E3122;
+    --secondary-color: #FAFAFA;
     --description-color: #6B7280;
     --card-color: #FFFFFF;
-    --cta-color: #F9D2BA;
     --background-color: #FAFAFA;
     --border-color: #E5E5E5;
     --hover-color: #183829;
@@ -32,11 +30,36 @@
 
     /* font family */
     --font-sans: "Poppins", sans-serif;
-    --font-heading: "Abril Fatface", serif;
+
+    /* Status colors */
+    --success-color: #16A34A;
+    --hover-success-color: #15803D;
+
+    --warning-color: #F59E0B;
+    --hover-warning-color: #D97706;
+
+    --error-color: #DC2626;
+    --hover-error-color: #B91C1C;
+
+    --hero-text-color: #FFFFFF;
+    --hero-overlay: rgba(0, 0, 0, 0.45);
 }
+
+[data-theme="dark"] {
+    --background-color: #0d0f12;
+    --card-color: #16181d;
+    --primary-color: #e2e8f0;
+    --secondary-color: #1f232b;
+    --description-color: #9ca3af;
+    --border-color: #272c36;
+    --hover-color: #2a2f3a;
+    --footer-color: #16181d;
+}
+
 /* Typography styles */
 h1 {
   font-size: var(--text-header-1);
+  margin: 0;
 }
 
 h2 {
@@ -87,14 +110,33 @@ h6 {
   font-size: var(--text-small-3);
 }
 
-.container {
-    font-family: var(--font-sans);
-}
-
-/* Header */
 header {
     background: var(--primary-color);
-    padding: 8px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    border-bottom: 1px solid var(--border-color, #E5E5E5);
+    z-index: 1000;
+    box-sizing: border-box;
+}
+
+header nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0px;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--background-color);
+}
+
+.user-container {
+  padding-top: 80px;
 }
 
 nav {
@@ -103,6 +145,11 @@ nav {
     align-items: center;
     max-width: 1280px;
     margin: 0 auto;
+}
+
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 ul {
@@ -143,120 +190,40 @@ ul {
   border: 1px solid var(--hover-color);
 }
 
-/* Home */
-.hero {
-  position: relative;
-  display: flex;
-  align-items: center;
-  padding: 140px 4.3%;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* ===== NAV BADGE STYLING ===== */
+.icon-badge-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.hero-content {
-  width: 100%;
-  max-width: 390px;
-  margin-left: 1%;
-  color: var(--card-color);
+.nav-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: var(--error-color, #DC2626);
+    color: #FFFFFF;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    box-sizing: border-box;
+    border: 2px solid var(--primary-color);
+    line-height: 1;
+    animation: badge-pop 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-.hero-label {
-  margin-bottom: 10px;
-  font-style: italic;
-}
-
-.hero-heading {
-  text-transform: uppercase;
-}
-
-.hero-description {
-  font-style: italic;
-}
-
-.hero h1 {
-  margin: 0 0 8px;
-  font-size: var(--text-header-6);
-  font-weight: 500;
-  line-height: 1.25;
-}
-
-.hero-description {
-  max-width: 330px;
-  margin: 0 0 16px;
-  font-size: var(--text-body-4);
-  line-height: 1.4;
-}
-
-.hero-button {
-  display: inline-block;
-  padding: 10px 32px;
-  border-radius: 30px;
-  background-color: var(--primary-color);
-  color: var(--card-color);
-  font-size: var(--text-body-4);
-  font-style: italic;
-  text-decoration: none;
-  transition: background-color 0.2s;
-}
-
-.hero-button:hover {
-  background-color: var(--footer-color);
-}
-
-@media (max-width: 600px) {
-  .hero {
-    min-height: 430px;
-    padding: 35px 6%;
-    background-position: center;
-  }
-
-  .hero-content {
-    max-width: 320px;
-    margin-left: 0;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-/* Button */
-.btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  align-self: flex-start;
-  padding: 12px 24px;
-
-  background-color: var(--primary-color);
-  color: var(--card-color);
-
-  border: none;
-  border-radius: 8px;
-
-  font: inherit;
-  cursor: pointer;
-  text-decoration: none;
-
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    transform 0.2s ease;
-}
-
-.btn:hover {
-  background-color: var(--hover-color);
-}
-
-.btn:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 3px;
+@keyframes badge-pop {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

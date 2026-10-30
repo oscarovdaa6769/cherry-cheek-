@@ -1,0 +1,92 @@
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  /* Remove horizontal padding here so it doesn't break the max-width alignment */
+  padding: 140px 0; 
+  min-height: 100vh;
+  min-height: 100dvh;
+  box-sizing: border-box;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* New container to mirror the header's alignment */
+.hero-container {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 4.3%; /* Keeps spacing for mobile/tablet */
+  box-sizing: border-box;
+}
+
+/* Ensure text aligns exactly with the header on large screens */
+@media (min-width: 1280px) {
+  .hero-container {
+    padding: 0; /* Aligns perfectly with your max-width: 1280px header */
+  }
+}
+
+.hero-content {
+  width: 100%;
+  max-width: 440px; /* Slightly widened from 390px to prevent awkward text wrapping */
+  margin-left: 0;
+  color: var(--hero-text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 12px; /* Stable gap before heading */
+  opacity: 0.9;
+}
+
+.hero-heading {
+  font-size: clamp(2.2rem, 4vw, 3.2rem); /* Scales smoothly across screens */
+  line-height: 1.15;                    /* Tight, modern line height for titles */
+  margin-bottom: 16px;                  /* Clear, stable gap before description */
+}
+
+.hero-description {
+  font-size: 1rem;
+  line-height: 1.6;                     /* Generous line height for readability */
+  margin-bottom: 28px;                  /* Generous breathing room before the button */
+}
+
+/* Optional: Button styling alignment if needed */
+.hero-button {
+  padding: 12px 28px;                   /* 1:2 ratio for visual stability */
+  border-radius: 8px;
+}
+
+/* ... (keep the rest of your .hero-label, .hero-heading, .hero-button, etc. exactly as they were) ... */
+
+@media (max-width: 900px) {
+  .hero {
+    padding: 100px 0;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero {
+    min-height: 430px;
+    padding: 60px 0;
+  }
+
+  .hero-container {
+    padding: 0 6%; /* Matches mobile padding */
+  }
+
+  .hero-content {
+    max-width: 320px;
+  }
+
+  .hero-description {
+    max-width: 100%;
+  }
+}
