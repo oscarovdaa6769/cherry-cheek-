@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";
 import productsData from "../../data/products.json";
 import categoriesData from "../../data/categories.json";
@@ -13,10 +12,10 @@ const emptyForm = {
   categoryId: categoriesData[0]?.id || 1,
   price: "",
   stockQuantity: "",
+  image: "",
 };
 
 export default function AdminDashboard() {
-  const navigate = useNavigate();
   const [products, setProducts] = useState(productsData);
   const [categories] = useState(categoriesData);
   const [search, setSearch] = useState("");
@@ -27,38 +26,9 @@ export default function AdminDashboard() {
   const [form, setForm] = useState(emptyForm);
   const [viewingProduct, setViewingProduct] = useState(null);
 
-  const totalStock = products.reduce(
-    (sum, product) => sum + Number(product.stockQuantity || 0),
-    0
-  );
-
-  const lowStockCount = products.filter(
-    (product) => Number(product.stockQuantity || 0) < 15
-  ).length;
-
-  const filteredProducts = products.filter((product) => {
-    const matchesSearch =
-      product.name.toLowerCase().includes(search.toLowerCase()) ||
-      product.sku.toLowerCase().includes(search.toLowerCase());
-
-    const matchesCategory =
-      selectedCategory === "All" ||
-      String(product.categoryId) === String(selectedCategory);
-
-    return matchesSearch && matchesCategory;
-  });
-
-  const pageSize = 6;
-  const totalPages = Math.max(
-    1,
-    Math.ceil(filteredProducts.length / pageSize)
-  );
-  const currentPage = Math.min(page, totalPages);
-
-  const visibleProducts = filteredProducts.slice(
-    (currentPage - 1) * pageSize,
-    currentPage * pageSize
-  );
+  // Statistics
+  const totalStock = products.reduce((sum, p) => sum + Number(p.stockQuantity || 0), 0);
+  const lowStockCount = products.filter((p) => Number(p.stockQuantity || 0) < 15).length;
 
   const stats = [
     { title: "Total Skincare", value: products.length, icon: "solar:box-minimalistic-bold-duotone" },
@@ -67,13 +37,26 @@ export default function AdminDashboard() {
     { title: "Low Stock Items", value: lowStockCount, icon: "solar:danger-triangle-bold-duotone", isWarning: lowStockCount > 0 },
   ];
 
-  function openAdd() {
+  // Filtering & Pagination
+  const filteredProducts = products.filter((p) => {
+    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || p.sku.toLowerCase().includes(search.toLowerCase());
+    const matchesCategory = selectedCategory === "All" || String(p.categoryId) === String(selectedCategory);
+    return matchesSearch && matchesCategory;
+  });
+
+  const pageSize = 6;
+  const totalPages = Math.max(1, Math.ceil(filteredProducts.length / pageSize));
+  const currentPage = Math.min(page, totalPages);
+  const visibleProducts = filteredProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+
+  // Modal Handlers
+  const openAdd = () => {
     setEditingId(null);
     setForm(emptyForm);
     setModalOpen(true);
-  }
+  };
 
-  function openEdit(product) {
+  const openEdit = (product) => {
     setEditingId(product.id);
     setForm({
       sku: product.sku,
@@ -81,17 +64,25 @@ export default function AdminDashboard() {
       categoryId: product.categoryId,
       price: product.price,
       stockQuantity: product.stockQuantity,
+      image: product.image || "",
     });
     setModalOpen(true);
-  }
+  };
 
-  function openView(product) {
-    setViewingProduct(product);
-  }
+  // Handle local image file selection and convert to Base64
+  const handleImageFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setForm((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
-  function saveProduct(event) {
-    event.preventDefault();
-
+  const saveProduct = (e) => {
+    e.preventDefault();
     const data = {
       sku: form.sku.trim().toUpperCase(),
       name: form.name.trim(),
@@ -99,46 +90,31 @@ export default function AdminDashboard() {
       brand: "Cherry Cheeks",
       price: Number(form.price),
       stockQuantity: Number(form.stockQuantity),
+      image: form.image || fallbackImg,
       active: true,
     };
 
     if (editingId !== null) {
-      setProducts((previous) =>
-        previous.map((product) =>
-          product.id === editingId ? { ...product, ...data } : product
-        )
-      );
+      setProducts((prev) => prev.map((p) => (p.id === editingId ? { ...p, ...data } : p)));
     } else {
-      setProducts((previous) => [
-        { ...data, id: Date.now() },
-        ...previous,
-      ]);
+      setProducts((prev) => [{ ...data, id: Date.now() }, ...prev]);
       setPage(1);
     }
 
     setModalOpen(false);
-    setEditingId(null);
     setForm(emptyForm);
-  }
+  };
 
-  function deleteProduct(id) {
+  const deleteProduct = (id) => {
     if (window.confirm("Are you sure you want to delete this product?")) {
-      setProducts((previous) =>
-        previous.filter((product) => product.id !== id)
-      );
+      setProducts((prev) => prev.filter((p) => p.id !== id));
     }
-  }
-
-  function updateSearch(value) {
-    setSearch(value);
-    setPage(1);
-  }
+  };
 
   return (
     <main className="admin-dashboard-page">
-
-      {/* DASHBOARD CONTENT */}
       <section className="admin-dashboard-content">
+        {/* Page Header */}
         <div className="admin-dashboard-page-heading">
           <div>
             <span className="admin-dashboard-eyebrow">CHERRY CHEEK ADMIN</span>
@@ -147,26 +123,23 @@ export default function AdminDashboard() {
               Manage your skincare catalog, monitor stock levels, and update product pricing.
             </p>
           </div>
-
           <button type="button" className="admin-primary-btn" onClick={openAdd}>
             <Icon icon="solar:add-circle-bold" />
             <span>New Product</span>
           </button>
         </div>
 
-        {/* STATISTICS GRID */}
+        {/* Stats Grid */}
         <section className="admin-stats-grid">
           {stats.map((stat) => (
-            <article className={`admin-stat-card ${stat.isWarning ? 'warning-card' : ''}`} key={stat.title}>
+            <article key={stat.title} className={`admin-stat-card ${stat.isWarning ? "warning-card" : ""}`}>
               <div className="admin-stat-header">
                 <span className="stat-label">{stat.title}</span>
                 <div className="stat-icon-wrapper">
                   <Icon icon={stat.icon} />
                 </div>
               </div>
-
               <strong className="stat-value">{stat.value}</strong>
-
               <div className="stat-trend">
                 <Icon icon="solar:trending-up-linear" />
                 <span>Updated in real-time</span>
@@ -175,15 +148,15 @@ export default function AdminDashboard() {
           ))}
         </section>
 
-        {/* TOOLBAR */}
+        {/* Toolbar */}
         <section className="admin-toolbar">
           <div className="filter-group">
             <div className="select-wrapper">
               <Icon icon="solar:filter-bold-duotone" className="filter-icon" />
               <select
                 value={selectedCategory}
-                onChange={(event) => {
-                  setSelectedCategory(event.target.value);
+                onChange={(e) => {
+                  setSelectedCategory(e.target.value);
                   setPage(1);
                 }}
                 aria-label="Filter by category"
@@ -201,14 +174,17 @@ export default function AdminDashboard() {
             <Icon icon="solar:magnifer-linear" />
             <input
               value={search}
-              onChange={(event) => updateSearch(event.target.value)}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search by name or SKU..."
               aria-label="Search table"
             />
           </div>
         </section>
 
-        {/* PRODUCT TABLE CARD */}
+        {/* Products Table */}
         <section className="admin-table-card">
           <div className="table-scroll">
             <table className="admin-table">
@@ -221,22 +197,17 @@ export default function AdminDashboard() {
                   <th>Actions</th>
                 </tr>
               </thead>
-
               <tbody>
-                {visibleProducts.map((product, index) => {
+                {visibleProducts.map((product) => {
                   const catObj = categories.find((c) => c.id === product.categoryId);
                   const isLow = Number(product.stockQuantity) < 15;
                   return (
                     <tr key={product.id}>
                       <td>
                         <div className="product-cell">
-                          <img
-                            className="product-thumb"
-                            src={product.image || fallbackImg}
-                            alt={product.name}
-                          />
+                          <img className="product-thumb" src={product.image || fallbackImg} alt={product.name} />
                           <div>
-                            <span className="product-sku" style={{ fontSize: '11px', color: 'var(--description-color)', display: 'block' }}>
+                            <span className="product-sku" style={{ fontSize: "11px", color: "var(--description-color)", display: "block" }}>
                               {product.sku}
                             </span>
                             <span className="product-cell-name">{product.name}</span>
@@ -244,44 +215,27 @@ export default function AdminDashboard() {
                         </div>
                       </td>
                       <td>
-                        <span className="category-tag">{catObj ? catObj.name : "Skincare"}</span>
+                        <span className="category-tag">{catObj?.name || "Skincare"}</span>
                       </td>
                       <td className="price-cell">${Number(product.price).toFixed(2)}</td>
                       <td>
-                        <span className={`stock-badge ${isLow ? 'low-stock' : 'in-stock'}`}>
+                        <span className={`stock-badge ${isLow ? "low-stock" : "in-stock"}`}>
                           <Icon icon={isLow ? "solar:danger-circle-bold" : "solar:check-circle-bold"} />
                           {product.stockQuantity} units
                         </span>
                       </td>
                       <td>
-                        <td>
-                          <div className="row-actions">
-                            <button
-                              type="button"
-                              className="action-btn view-btn"
-                              onClick={() => openView(product)}
-                              aria-label={`View ${product.name}`}
-                            >
-                              <Icon icon="solar:eye-bold" />
-                            </button>
-                            <button
-                              type="button"
-                              className="action-btn edit-btn"
-                              onClick={() => openEdit(product)}
-                              aria-label={`Edit ${product.name}`}
-                            >
-                              <Icon icon="solar:pen-bold" />
-                            </button>
-                            <button
-                              type="button"
-                              className="action-btn delete-btn"
-                              onClick={() => deleteProduct(product.id)}
-                              aria-label={`Delete ${product.name}`}
-                            >
-                              <Icon icon="solar:trash-bin-trash-bold" />
-                            </button>
-                          </div>
-                        </td>
+                        <div className="row-actions">
+                          <button type="button" className="action-btn view-btn" onClick={() => setViewingProduct(product)} aria-label={`View ${product.name}`}>
+                            <Icon icon="solar:eye-bold" />
+                          </button>
+                          <button type="button" className="action-btn edit-btn" onClick={() => openEdit(product)} aria-label={`Edit ${product.name}`}>
+                            <Icon icon="solar:pen-bold" />
+                          </button>
+                          <button type="button" className="action-btn delete-btn" onClick={() => deleteProduct(product.id)} aria-label={`Delete ${product.name}`}>
+                            <Icon icon="solar:trash-bin-trash-bold" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );
@@ -299,29 +253,16 @@ export default function AdminDashboard() {
             </table>
           </div>
 
+          {/* Pagination */}
           <footer className="admin-pagination">
-            <button
-              type="button"
-              className="page-btn"
-              disabled={currentPage === 1}
-              onClick={() => setPage((value) => Math.max(1, value - 1))}
-            >
+            <button type="button" className="page-btn" disabled={currentPage === 1} onClick={() => setPage((v) => Math.max(1, v - 1))}>
               <Icon icon="solar:alt-arrow-left-linear" />
               <span>Previous</span>
             </button>
-
             <span className="page-info">
               Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
             </span>
-
-            <button
-              type="button"
-              className="page-btn"
-              disabled={currentPage >= totalPages}
-              onClick={() =>
-                setPage((value) => Math.min(totalPages, value + 1))
-              }
-            >
+            <button type="button" className="page-btn" disabled={currentPage >= totalPages} onClick={() => setPage((v) => Math.min(totalPages, v + 1))}>
               <span>Next</span>
               <Icon icon="solar:alt-arrow-right-linear" />
             </button>
@@ -329,112 +270,62 @@ export default function AdminDashboard() {
         </section>
       </section>
 
-      {/* ADD / EDIT PRODUCT MODAL */}
+      {/* Add / Edit Modal */}
       {modalOpen && (
-        <div
-          className="admin-modal-overlay"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setModalOpen(false);
-            }
-          }}
-        >
+        <div className="admin-modal-overlay" onMouseDown={(e) => e.target === e.currentTarget && setModalOpen(false)}>
           <form className="admin-modal" onSubmit={saveProduct}>
             <div className="admin-modal-header">
               <div>
                 <span className="admin-eyebrow">PRODUCT EDITOR</span>
                 <h2>{editingId !== null ? "Edit Product" : "New Product"}</h2>
               </div>
-              <button
-                type="button"
-                className="admin-close-btn"
-                onClick={() => setModalOpen(false)}
-                aria-label="Close modal"
-              >
+              <button type="button" className="admin-close-btn" onClick={() => setModalOpen(false)} aria-label="Close modal">
                 <Icon icon="solar:close-circle-bold" />
               </button>
             </div>
 
             <label className="admin-modal-field">
               <span>SKU Code</span>
-              <input
-                required
-                value={form.sku}
-                onChange={(event) =>
-                  setForm({ ...form, sku: event.target.value })
-                }
-                placeholder="e.g. SK-101"
-              />
+              <input required value={form.sku} onChange={(e) => setForm({ ...form, sku: e.target.value })} placeholder="e.g. SK-101" />
             </label>
 
             <label className="admin-modal-field">
               <span>Product Name</span>
-              <input
-                required
-                value={form.name}
-                onChange={(event) =>
-                  setForm({ ...form, name: event.target.value })
-                }
-                placeholder="e.g. Gentle Face Cleanser"
-              />
+              <input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Gentle Face Cleanser" />
             </label>
 
             <label className="admin-modal-field">
               <span>Category</span>
-              <select
-                value={form.categoryId}
-                onChange={(event) =>
-                  setForm({ ...form, categoryId: event.target.value })
-                }
-              >
+              <select value={form.categoryId} onChange={(e) => setForm({ ...form, categoryId: e.target.value })}>
                 {categories.map((cat) => (
-                  <option key={cat.id} value={cat.id}>
-                    {cat.name}
-                  </option>
+                  <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
               </select>
+            </label>
+
+            <label className="admin-modal-field">
+              <span>Product Image File</span>
+              <input type="file" accept="image/*" onChange={handleImageFileChange} />
+              {form.image && (
+                <div style={{ marginTop: "8px" }}>
+                  <img src={form.image} alt="Preview" style={{ width: "50px", height: "50px", objectFit: "cover", borderRadius: "8px", border: "1px solid var(--border-color)" }} />
+                </div>
+              )}
             </label>
 
             <div className="admin-form-row">
               <label className="admin-modal-field">
                 <span>Price ($)</span>
-                <input
-                  required
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  value={form.price}
-                  onChange={(event) =>
-                    setForm({ ...form, price: event.target.value })
-                  }
-                  placeholder="19.99"
-                />
+                <input required type="number" min="0" step="0.01" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} placeholder="19.99" />
               </label>
-
               <label className="admin-modal-field">
                 <span>Stock Quantity</span>
-                <input
-                  required
-                  type="number"
-                  min="0"
-                  step="1"
-                  value={form.stockQuantity}
-                  onChange={(event) =>
-                    setForm({ ...form, stockQuantity: event.target.value })
-                  }
-                  placeholder="100"
-                />
+                <input required type="number" min="0" step="1" value={form.stockQuantity} onChange={(e) => setForm({ ...form, stockQuantity: e.target.value })} placeholder="100" />
               </label>
             </div>
 
             <div className="admin-modal-actions">
-              <button
-                type="button"
-                className="admin-cancel-btn"
-                onClick={() => setModalOpen(false)}
-              >
-                Cancel
-              </button>
+              <button type="button" className="admin-cancel-btn" onClick={() => setModalOpen(false)}>Cancel</button>
               <button type="submit" className="admin-primary-btn">
                 <span>{editingId !== null ? "Save Changes" : "Add Product"}</span>
               </button>
@@ -442,50 +333,36 @@ export default function AdminDashboard() {
           </form>
         </div>
       )}
-      {/* VIEW PRODUCT MODAL */}
+
+      {/* View Modal */}
       {viewingProduct && (
-        <div
-          className="admin-modal-overlay"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setViewingProduct(null);
-            }
-          }}
-        >
+        <div className="admin-modal-overlay" onMouseDown={(e) => e.target === e.currentTarget && setViewingProduct(null)}>
           <div className="admin-modal">
             <div className="admin-modal-header">
               <div>
                 <span className="admin-eyebrow">PRODUCT DETAILS</span>
                 <h2>{viewingProduct.name}</h2>
               </div>
-              <button
-                type="button"
-                className="admin-close-btn"
-                onClick={() => setViewingProduct(null)}
-                aria-label="Close modal"
-              >
+              <button type="button" className="admin-close-btn" onClick={() => setViewingProduct(null)} aria-label="Close modal">
                 <Icon icon="solar:close-circle-bold" />
               </button>
             </div>
 
-            <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+            <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
               <img
                 src={viewingProduct.image || fallbackImg}
                 alt={viewingProduct.name}
-                style={{ width: '80px', height: '80px', borderRadius: '12px', objectFit: 'cover', border: '1px solid var(--border-color)' }}
+                style={{ width: "80px", height: "80px", borderRadius: "12px", objectFit: "cover", border: "1px solid var(--border-color)" }}
               />
               <div>
-                <span style={{ fontSize: '12px', color: 'var(--description-color)', display: 'block' }}>SKU: {viewingProduct.sku}</span>
-                <strong style={{ fontSize: '18px', color: 'var(--primary-color)' }}>${Number(viewingProduct.price).toFixed(2)}</strong>
+                <span style={{ fontSize: "12px", color: "var(--description-color)", display: "block" }}>SKU: {viewingProduct.sku}</span>
+                <strong style={{ fontSize: "18px", color: "var(--primary-color)" }}>${Number(viewingProduct.price).toFixed(2)}</strong>
               </div>
             </div>
 
             <div className="admin-modal-field">
               <span>Category</span>
-              <input
-                readOnly
-                value={categories.find(c => c.id === viewingProduct.categoryId)?.name || "Skincare"}
-              />
+              <input readOnly value={categories.find((c) => c.id === viewingProduct.categoryId)?.name || "Skincare"} />
             </div>
 
             <div className="admin-form-row">
@@ -500,13 +377,7 @@ export default function AdminDashboard() {
             </div>
 
             <div className="admin-modal-actions">
-              <button
-                type="button"
-                className="admin-primary-btn"
-                onClick={() => setViewingProduct(null)}
-              >
-                Done
-              </button>
+              <button type="button" className="admin-primary-btn" onClick={() => setViewingProduct(null)}>Done</button>
             </div>
           </div>
         </div>

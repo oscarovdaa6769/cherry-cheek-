@@ -64,7 +64,6 @@
     text-transform: uppercase;
     color: var(--description-color);
     font-weight: 600;
-    font-style: italic;
 }
 
 .product-detail-name {

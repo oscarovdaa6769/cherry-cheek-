@@ -5,13 +5,6 @@ import Review from "../../components/common/Review";
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import "./ProductDetail.css";
-import productsData from '../../data/products.json';
-import categoriesData from '../../data/categories.json';
-
-const categoryMap = categoriesData.reduce((acc, cat) => {
-  acc[cat.id] = cat.name;
-  return acc;
-}, {});
 
 export default function ProductDetail() {
     const navigate = useNavigate();
@@ -19,17 +12,84 @@ export default function ProductDetail() {
     const [searchParams] = useSearchParams();
     
     const productId = Number(paramId || searchParams.get('id')) || 101;
-    const rawProduct = productsData.find((p) => p.id === productId) || productsData[0];
 
-    // Map new json structure to display properties safely
+    // State for asynchronous data loading
+    const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    // Asynchronously load JSON data using async/await
+    useEffect(() => {
+        async function loadProductData() {
+            try {
+                const [prodModule, catModule] = await Promise.all([
+                    import('../../data/products.json'),
+                    import('../../data/categories.json')
+                ]);
+
+                setProducts(prodModule.default || prodModule);
+                setCategories(catModule.default || catModule);
+            } catch (err) {
+                console.error("Error loading JSON via async/await:", err);
+            } finally {
+                setLoading(false);
+            }
+        }
+        loadProductData();
+    }, []);
+
+    const [selectedSize, setSelectedSize] = useState('50ml');
+    const [quantity, setQuantity] = useState(1);
+    const [toast, setToast] = useState({ show: false, message: '' });
+
+    const [isWishlisted, setIsWishlisted] = useState(() => {
+        try {
+            return (JSON.parse(localStorage.getItem('wishlist')) || []).includes(productId);
+        } catch {
+            return false;
+        }
+    });
+
+    useEffect(() => {
+        try {
+            const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+            setIsWishlisted(wishlist.includes(productId));
+        } catch {
+            setIsWishlisted(false);
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [productId]);
+
+    if (loading) {
+        return (
+            <main className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
+                <p>Loading product details...</p>
+            </main>
+        );
+    }
+
+    const categoryMap = categories.reduce((acc, cat) => {
+        acc[cat.id] = cat.name;
+        return acc;
+    }, {});
+
+    const rawProduct = products.find((p) => p.id === productId) || products[0];
+
+    if (!rawProduct) {
+        return (
+            <main className="container" style={{ padding: '80px 0', textAlign: 'center' }}>
+                <p>Product not found.</p>
+            </main>
+        );
+    }
+
     const product = {
         id: rawProduct.id,
         title: rawProduct.name,
         category: categoryMap[rawProduct.categoryId] || "Skincare",
         price: `$${Number(rawProduct.price).toFixed(2)}`,
-        rawPrice: rawProduct.price,
         image: rawProduct.image || "src/assets/images/fallback.jpg",
-        description: `High-quality ${rawProduct.brand} formulation designed for daily radiance and skin barrier protection (SKU: ${rawProduct.sku}).`,
+        description: `High-quality ${rawProduct.brand || 'Cherry Cheeks'} formulation designed for daily radiance and skin barrier protection (SKU: ${rawProduct.sku}).`,
         sizes: ['50ml', '100ml'],
         features: [
             { icon: "solar:leaf-bold-duotone", label: "100% Natural" },
@@ -40,50 +100,32 @@ export default function ProductDetail() {
         details: `Authentic ${rawProduct.name} crafted under strict quality controls. Stock available: ${rawProduct.stockQuantity} units.`
     };
 
-    const [selectedSize, setSelectedSize] = useState(product.sizes[0]);
-    const [quantity, setQuantity] = useState(1);
-    const [showToast, setShowToast] = useState(false);
-    const [toastMessage, setToastMessage] = useState('');
-
-    const [isWishlisted, setIsWishlisted] = useState(() => {
-        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        return savedWishlist.includes(product.id);
-    });
-
-    useEffect(() => {
-        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        setIsWishlisted(savedWishlist.includes(product.id));
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }, [product.id]);
+    const triggerToast = (msg) => {
+        setToast({ show: true, message: msg });
+        setTimeout(() => setToast({ show: false, message: '' }), 3000);
+    };
 
     const handleWishlist = () => {
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        const wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+        const nextState = !isWishlisted;
+        setIsWishlisted(nextState);
 
-        const savedWishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
-        const nextWishlistState = !isWishlisted;
-        setIsWishlisted(nextWishlistState);
+        const updated = nextState
+            ? [...wishlist, product.id]
+            : wishlist.filter(id => id !== product.id);
 
-        let updatedWishlist;
-        if (nextWishlistState) {
-            updatedWishlist = [...savedWishlist, product.id];
-            setToastMessage('Added to your wishlist');
-        } else {
-            updatedWishlist = savedWishlist.filter(itemId => itemId !== product.id);
-            setToastMessage('Removed from your wishlist');
-        }
-
-        localStorage.setItem('wishlist', JSON.stringify(updatedWishlist));
+        localStorage.setItem('wishlist', JSON.stringify(updated));
+        triggerToast(nextState ? 'Added to your wishlist' : 'Removed from your wishlist');
     };
 
     const handleAddToCart = () => {
-        const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
-        const existingIndex = savedCart.findIndex(item => item.id === product.id);
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const index = cart.findIndex(item => item.id === product.id);
 
-        if (existingIndex > -1) {
-            savedCart[existingIndex].quantity += quantity;
+        if (index > -1) {
+            cart[index].quantity += quantity;
         } else {
-            savedCart.push({
+            cart.push({
                 id: product.id,
                 title: product.title,
                 category: product.category,
@@ -93,10 +135,10 @@ export default function ProductDetail() {
             });
         }
 
-        localStorage.setItem('cart', JSON.stringify(savedCart));
-        setToastMessage('Added to cart');
-        setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000);
+        localStorage.setItem('cart', JSON.stringify(cart));
+        window.dispatchEvent(new CustomEvent('cart-added', { detail: `Added "${product.title}" to cart!` }));
+        window.dispatchEvent(new Event('storage'));
+        triggerToast('Added to cart');
     };
 
     return (
@@ -165,10 +207,10 @@ export default function ProductDetail() {
                             </button>
                         </div>
 
-                        {showToast && (
+                        {toast.show && (
                             <div className="wishlist-toast">
                                 <Icon icon="solar:check-circle-bold" />
-                                <span>{toastMessage}</span>
+                                <span>{toast.message}</span>
                             </div>
                         )}
 

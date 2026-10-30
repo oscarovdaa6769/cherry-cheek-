@@ -10,6 +10,7 @@
   transition: all 0.2s ease;
   cursor: pointer;
   font-size: var(--text-body-3);
+  text-decoration: none;
 }
 
 .btn:hover {

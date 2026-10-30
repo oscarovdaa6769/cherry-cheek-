@@ -2,6 +2,8 @@ import HeroBanner from '../../assets/images/banner.jpg';
 import Btn from "../common/Button";
 import './Hero.css';
 import '../../App.css';
+import { Link } from "react-router-dom";
+
 
 export default function Hero() {
   return (
@@ -26,7 +28,7 @@ export default function Hero() {
             your natural beauty, every day.
           </p>
 
-          <Btn name="Shop now" className="hero-button" />
+          <Link className="btn" to="/products">Shop now</Link>
         </div>
       </div>
     </section>

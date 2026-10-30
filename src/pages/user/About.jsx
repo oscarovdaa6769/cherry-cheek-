@@ -18,7 +18,7 @@ export default function About() {
 
       {/* Big photo */}
       <div className="about-photo">
-        <img src={aboutData.teamImage} alt="Our team at work" />
+        <img src="src/assets/images/fallback.jpg" alt="Our team at work" />
       </div>
 
       {/* Numbers / Stats */}

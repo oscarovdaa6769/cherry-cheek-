@@ -459,8 +459,7 @@
 
 .admin-modal-field input,
 .admin-modal-field select {
-  height: 44px;
-  padding: 0 14px;
+  padding: 12px 14px;
   border: 1px solid var(--border-color);
   border-radius: 10px;
   background: var(--background-color);
@@ -512,6 +511,45 @@
 .view-btn:hover {
   background: var(--secondary-color);
   border-color: var(--primary-color);
+}
+
+/* Styled File Upload Input */
+input[type="file"] {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--background-color);
+  color: var(--primary-color);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  font-family: var(--font-sans);
+  font-size: var(--text-body-4);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+input[type="file"]::file-selector-button {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 6px;
+  padding: 8px 14px;
+  font-family: var(--font-sans);
+  font-size: var(--text-small-1);
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: 12px;
+  transition: opacity 0.2s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  opacity: 0.85;
+}
+
+input[type="file"]:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(29, 69, 51, 0.08);
+  outline: none;
 }
 
 /* RESPONSIVE */
