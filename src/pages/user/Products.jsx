@@ -5,6 +5,7 @@ import Card from "../../components/product/Card";
 import productsData from '../../data/products.json';
 import categoriesData from '../../data/categories.json';
 import '../../App.css';
+import fallbackImg from "../../assets/images/fallback.jpg"
 
 /* ---------- Data Mapping ---------- */
 const CATEGORIES = ["All", ...categoriesData.map(c => c.name)];
@@ -16,7 +17,7 @@ const categoryMap = categoriesData.reduce((acc, cat) => {
 
 const allProducts = productsData.map((p) => ({
   id: p.id,
-  image: p.image || "src/assets/images/fallback.jpg",
+  image: p.image || {fallbackImg},
   category: categoryMap[p.categoryId] || "Skincare",
   title: p.name,
   price: `$${Number(p.price).toFixed(2)}`,

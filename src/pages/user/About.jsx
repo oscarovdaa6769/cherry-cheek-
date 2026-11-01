@@ -1,5 +1,6 @@
 import { Icon } from "@iconify/react";
 import aboutData from "../../data/about.json";
+import fallbackImg from "../../assets/images/fallback.jpg"
 import './About.css';
 import '../../App.css';
 
@@ -18,7 +19,7 @@ export default function About() {
 
       {/* Big photo */}
       <div className="about-photo">
-        <img src="src/assets/images/fallback.jpg" alt="Our team at work" />
+        <img src={fallbackImg} alt="Our team at work" />
       </div>
 
       {/* Numbers / Stats */}
