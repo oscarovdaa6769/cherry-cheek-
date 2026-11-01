@@ -3,7 +3,7 @@
     font-family: var(--font-sans);
     color: var(--primary-color);
     min-height: calc(100vh - 80px);
-    padding: 40px 16px 80px 16px;
+    padding: 32px 16px 80px 16px;
     box-sizing: border-box;
 }
 
@@ -27,10 +27,11 @@
     display: flex;
     align-items: baseline;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .cart-title {
-    font-size: var(--text-header-3);
+    font-size: clamp(24px, 4vw, var(--text-header-3));
     font-weight: 800;
     color: var(--primary-color);
     margin: 0;
@@ -45,7 +46,7 @@
 /* Layout Grid */
 .cart-layout {
     display: grid;
-    grid-template-columns: 1fr 380px;
+    grid-template-columns: minmax(0, 1fr) 380px;
     gap: 32px;
     align-items: start;
 }
@@ -124,6 +125,7 @@
     flex-direction: column;
     gap: 4px;
     flex: 1;
+    min-width: 0;
 }
 
 .cart-item-cate {
@@ -140,6 +142,7 @@
     color: var(--primary-color);
     margin: 0;
     line-height: 1.3;
+    word-break: break-word;
 }
 
 .cart-item-unit-price {
@@ -199,6 +202,7 @@
     color: var(--primary-color);
     min-width: 70px;
     text-align: right;
+    white-space: nowrap;
 }
 
 .cart-item-remove-btn {
@@ -213,6 +217,7 @@
     align-items: center;
     justify-content: center;
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .cart-item-remove-btn:hover {
@@ -300,6 +305,8 @@
     margin-top: 12px;
     padding-top: 16px;
     border-top: 1px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .summary-features div {
@@ -322,6 +329,8 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .empty-cart-icon-box {
@@ -380,14 +389,32 @@
 }
 
 @media (max-width: 600px) {
+    .cart-page {
+        padding: 24px 16px 60px 12px;
+    }
+
+    .cart-items-section,
+    .cart-summary-card {
+        padding: 16px;
+    }
+
     .cart-item-card {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 12px;
+        align-items: stretch;
+        gap: 16px;
+    }
+
+    .cart-item-img-box {
+        width: 100%;
+        height: 160px;
     }
 
     .cart-item-controls {
         width: 100%;
         justify-content: space-between;
+    }
+
+    .cart-item-total-price {
+        text-align: left;
     }
 }
