@@ -142,7 +142,7 @@ export default function ProductDetail() {
     };
 
     return (
-        <main className="container" style={{ paddingBottom: '60px' }}>
+        <main className="container product-detail-container" style={{ paddingBottom: '60px' }}>
             <div className="product-detail-header">
                 <div>
                     <Btn name="Back" onClick={() => navigate(-1)} />

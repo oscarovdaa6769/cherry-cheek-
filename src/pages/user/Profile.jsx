@@ -42,7 +42,7 @@ export default function Profile() {
                     <p style={{ color: "var(--text-secondary)", marginBottom: "2rem" }}>
                         Sign in to view your profile, track orders, and manage your saved wishlist.
                     </p>
-                    <div style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+                    <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
                         <Link to="/login" className="submit-btn" style={{ textDecoration: "none", padding: "0.75rem 1.5rem" }}>
                             Sign In
                         </Link>
@@ -78,17 +78,14 @@ export default function Profile() {
                             <a href="/orders" className="profile-link-item">
                                 <Icon icon="solar:cart-3-bold" />
                                 <span>Order History</span>
-                                <Icon icon="solar:alt-arrow-right-linear" className="arrow-icon" />
                             </a>
                             <a href="/wishlist" className="profile-link-item">
                                 <Icon icon="solar:bookmark-bold" />
                                 <span>Saved Wishlist</span>
-                                <Icon icon="solar:alt-arrow-right-linear" className="arrow-icon" />
                             </a>
                             <a href="/settings" className="profile-link-item">
                                 <Icon icon="solar:settings-bold" />
                                 <span>Account Settings</span>
-                                <Icon icon="solar:alt-arrow-right-linear" className="arrow-icon" />
                             </a>
                             <a href="/" onClick={handleLogout} className='profile-logout-btn'>
                                 <Icon icon="solar:logout-2-bold" />

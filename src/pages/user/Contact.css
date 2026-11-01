@@ -50,7 +50,6 @@
 .contact-description {
   font-size: var(--text-body-4);
   color: var(--description-color);
-  font-style: italic;
   margin: 0;
   line-height: 1.6;
 }

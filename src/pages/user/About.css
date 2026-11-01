@@ -48,15 +48,16 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 40px;
+  gap: 32px;
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 32px;
+  flex-wrap: wrap;
 }
 
 .about-header__title {
   font-family: var(--font-sans);
   font-weight: 800;
-  font-size: var(--text-header-4);
+  font-size: clamp(32px, 4.5vw, var(--text-header-4));
   letter-spacing: -0.02em;
   color: var(--primary-color);
   line-height: 1.1;
@@ -67,6 +68,8 @@
   font-size: var(--text-body-4);
   line-height: 1.6;
   color: var(--description-color);
+  flex: 1;
+  min-width: 260px;
 }
 
 /* 2. Photo Banner */
@@ -111,7 +114,7 @@
 }
 
 .about-stat__value {
-  font-size: var(--text-header-5);
+  font-size: clamp(24px, 3vw, var(--text-header-5));
   font-weight: 700;
   line-height: 1.2;
   color: var(--primary-color);
@@ -146,7 +149,6 @@
 
 .about-story__eyebrow {
   font-size: var(--text-small-1);
-  font-style: italic;
   color: var(--description-color);
   font-weight: 600;
   text-transform: uppercase;
@@ -215,6 +217,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 0 16px;
 }
 
 .about-services__eyebrow {
@@ -229,7 +232,7 @@
   margin-top: 6px;
   font-family: var(--font-sans);
   font-weight: 800;
-  font-size: var(--text-header-5);
+  font-size: clamp(24px, 3.5vw, var(--text-header-5));
   color: var(--primary-color);
 }
 
@@ -284,10 +287,12 @@
 @media (max-width: 1024px) {
   .about-stats {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 
   .about-services__grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
   }
 }
 
@@ -304,9 +309,25 @@
     padding-bottom: 24px;
   }
 
+  .about-photo img {
+    aspect-ratio: 16 / 9;
+  }
+
   .about-story {
     grid-template-columns: 1fr;
     gap: 24px;
+  }
+
+  .about-story__left,
+  .about-block {
+    padding: 24px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .about-stats {
+    grid-template-columns: 1fr;
+    padding: 20px;
   }
 
   .about-services__grid {
