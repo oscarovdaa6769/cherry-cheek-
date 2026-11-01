@@ -75,22 +75,22 @@ export default function Profile() {
                         </div>
 
                         <div className="profile-nav-links">
-                            <a href="/orders" className="profile-link-item">
+                            <Link to="/orders" className="profile-link-item">
                                 <Icon icon="solar:cart-3-bold" />
                                 <span>Order History</span>
-                            </a>
-                            <a href="/wishlist" className="profile-link-item">
+                            </Link>
+                            <Link to="/wishlist" className="profile-link-item">
                                 <Icon icon="solar:bookmark-bold" />
                                 <span>Saved Wishlist</span>
-                            </a>
-                            <a href="/settings" className="profile-link-item">
+                            </Link>
+                            <Link to="/settings" className="profile-link-item">
                                 <Icon icon="solar:settings-bold" />
                                 <span>Account Settings</span>
-                            </a>
-                            <a href="/" onClick={handleLogout} className='profile-logout-btn'>
+                            </Link>
+                            <Link to="/" onClick={handleLogout} className='profile-logout-btn'>
                                 <Icon icon="solar:logout-2-bold" />
                                 <span>Logout</span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
 
