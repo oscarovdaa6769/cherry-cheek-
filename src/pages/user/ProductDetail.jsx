@@ -5,7 +5,6 @@ import Review from "../../components/common/Review";
 import { useState, useEffect } from 'react';
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import "./ProductDetail.css";
-import fallbackImg from "../../assets/images/fallback.jpg"
 
 export default function ProductDetail() {
     const navigate = useNavigate();
@@ -89,7 +88,7 @@ export default function ProductDetail() {
         title: rawProduct.name,
         category: categoryMap[rawProduct.categoryId] || "Skincare",
         price: `$${Number(rawProduct.price).toFixed(2)}`,
-        image: rawProduct.image || {fallbackImg},
+        image: rawProduct.image || "/images/fallback.jpg",
         description: `High-quality ${rawProduct.brand || 'Cherry Cheeks'} formulation designed for daily radiance and skin barrier protection (SKU: ${rawProduct.sku}).`,
         sizes: ['50ml', '100ml'],
         features: [

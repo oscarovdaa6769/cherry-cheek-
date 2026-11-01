@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { Icon } from "@iconify/react";
 import { Link } from "react-router-dom";
-import fallbackImg from "../../assets/images/fallback.jpg"
 import "./Contact.css";
 import "../../App.css";
 
 const PLACEHOLDER =
-  {fallbackImg};
+  "/images/fallback.jpg";
 const journalImages = [PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER, PLACEHOLDER];
 
 const contactDetails = [

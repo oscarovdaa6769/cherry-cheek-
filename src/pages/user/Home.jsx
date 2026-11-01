@@ -3,7 +3,6 @@ import { Icon } from "@iconify/react";
 import { useNavigate } from "react-router-dom";
 import productsData from '../../data/products.json';
 import categoriesData from '../../data/categories.json';
-import fallbackImg from "../../assets/images/fallback.jpg"
 import '../../App.css';
 import './Home.css';
 import Hero from '../../components/layout/Hero';
@@ -15,7 +14,7 @@ const categoryMap = categoriesData.reduce((acc, cat) => {
 }, {});
 
 /* Default Placeholder Image */
-const DEFAULT_IMAGE = {fallbackImg};
+const DEFAULT_IMAGE = "/images/fallback.jpg";
 
 /* ---------- Product Card Component ---------- */
 function HomeProductCard({ id, image, category, name, price, rating = 5 }) {

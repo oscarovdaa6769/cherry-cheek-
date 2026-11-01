@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Icon } from "@iconify/react";
 import productsData from "../../data/products.json";
 import categoriesData from "../../data/categories.json";
-import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Dashboard.css";
 import "../../App.css";
 
@@ -90,7 +89,7 @@ export default function AdminDashboard() {
       brand: "Cherry Cheeks",
       price: Number(form.price),
       stockQuantity: Number(form.stockQuantity),
-      image: form.image || fallbackImg,
+      image: form.image || "/images/fallback.jpg",
       active: true,
     };
 
@@ -205,7 +204,7 @@ export default function AdminDashboard() {
                     <tr key={product.id}>
                       <td>
                         <div className="product-cell">
-                          <img className="product-thumb" src={product.image || fallbackImg} alt={product.name} />
+                          <img className="product-thumb" src={product.image || "/images/fallback.jpg"} alt={product.name} />
                           <div>
                             <span className="product-sku" style={{ fontSize: "11px", color: "var(--description-color)", display: "block" }}>
                               {product.sku}
@@ -350,7 +349,7 @@ export default function AdminDashboard() {
 
             <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
               <img
-                src={viewingProduct.image || fallbackImg}
+                src={viewingProduct.image || "/images/fallback.jpg"}
                 alt={viewingProduct.name}
                 style={{ width: "80px", height: "80px", borderRadius: "12px", objectFit: "cover", border: "1px solid var(--border-color)" }}
               />

@@ -6,7 +6,6 @@ import productsData from '../../data/products.json';
 import categoriesData from '../../data/categories.json';
 import './Wishlist.css';
 import '../../App.css';
-import fallbackImg from "../../assets/images/fallback.jpg"
 
 const categoryMap = categoriesData.reduce((acc, cat) => {
     acc[cat.id] = cat.name;
@@ -35,7 +34,7 @@ export default function Wishlist() {
                         title: prod.name,
                         category: categoryMap[prod.categoryId] || "Skincare",
                         price: `$${Number(prod.price).toFixed(2)}`,
-                        image: prod.image || {fallbackImg}
+                        image: prod.image || "/images/fallback.jpg"
                     };
                 }
                 // Fallback if item is already a well-formed object
@@ -45,7 +44,7 @@ export default function Wishlist() {
                         title: item.title || item.name,
                         category: item.category || "Skincare",
                         price: typeof item.price === 'number' ? `$${item.price.toFixed(2)}` : item.price,
-                        image: item.image || {fallbackImg}
+                        image: item.image || "/images/fallback.jpg"
                     };
                 }
                 return null;

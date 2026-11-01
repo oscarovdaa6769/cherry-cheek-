@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Order.css";
 
 const DELIVERY_FEE = 2.00;
@@ -16,7 +15,7 @@ export default function Order() {
         id: item.id,
         name: item.title || item.name,
         price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace('$', '')) || 0,
-        image: item.image || fallbackImg,
+        image: item.image || "/images/fallback.jpg",
         quantity: item.quantity || 1
       }));
     } catch {
@@ -310,7 +309,7 @@ export default function Order() {
 
             {products.map((product) => (
               <div className="summary-item" key={product.id}>
-                <img src={product.image || fallbackImg} alt={product.name} />
+                <img src={product.image || "/images/fallback.jpg"} alt={product.name} />
 
                 <div className="summary-item-info">
                   <p className="summary-item-name">{product.name}</p>

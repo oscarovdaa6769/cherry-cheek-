@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import { Link, useNavigate } from "react-router-dom";
-import fallbackImg from "../../assets/images/fallback.jpg";
 import "./Checkout.css";
 import "../../App.css";
 
@@ -24,7 +23,7 @@ export default function Checkout() {
         name: item.title || item.name || "Cosmetic Product",
         detail: item.category || "Skincare",
         price: typeof item.price === 'number' ? item.price : parseFloat(String(item.price).replace('$', '')) || 0,
-        image: item.image || fallbackImg,
+        image: item.image || "/images/fallback.jpg",
         quantity: item.quantity || 1,
       }));
     } catch {
@@ -428,7 +427,7 @@ export default function Checkout() {
               {products.map((product) => (
                 <article className="checkout-product" key={product.id}>
                   <img
-                    src={product.image || fallbackImg}
+                    src={product.image || "/images/fallback.jpg"}
                     alt={product.name}
                     loading="lazy"
                   />

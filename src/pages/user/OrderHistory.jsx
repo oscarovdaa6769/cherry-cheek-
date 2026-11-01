@@ -6,7 +6,6 @@ import '../../App.css';
 import { useNavigate } from 'react-router-dom';
 import invoicesData from '../../data/invoices.json';
 import productsData from '../../data/products.json';
-import fallbackImg from "../../assets/images/fallback.jpg"
 
 // Map product lookup for order items
 const productMap = productsData.reduce((acc, p) => {
@@ -27,7 +26,7 @@ const initialOrders = invoicesData.map(inv => ({
             size: "Standard",
             qty: item.quantity,
             price: `$${item.unitPrice.toFixed(2)}`,
-            img: prod.image || {fallbackImg}
+            img: prod.image || "/images/fallback.jpg"
         };
     })
 }));

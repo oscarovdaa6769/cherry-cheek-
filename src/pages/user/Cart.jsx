@@ -6,7 +6,6 @@ import productsData from '../../data/products.json';
 import categoriesData from '../../data/carts.json';
 import './Cart.css';
 import '../../App.css';
-import fallbackImg from "../../assets/images/fallback.jpg"
 
 const categoryMap = categoriesData.reduce((acc, cat) => {
     acc[cat.id] = cat.name;
@@ -120,7 +119,7 @@ export default function Cart() {
                                     // Match category name or fallback to item data
                                     const displayCategory = item.category || categoryMap[item.categoryId] || "Skincare";
                                     const displayName = item.title || item.name || "Cosmetic Product";
-                                    const displayImage = item.image || {fallbackImg};
+                                    const displayImage = item.image || "/images/fallback.jpg";
 
                                     return (
                                         <div key={item.id} className="cart-item-card">
