@@ -2,29 +2,7 @@ import { useState, useEffect } from "react";
 import { Icon } from "@iconify/react";
 import "./Products.css";
 import Card from "../../components/product/Card";
-import productsData from '../../data/products.json';
-import categoriesData from '../../data/categories.json';
-import '../../App.css';
-
-/* ---------- Data Mapping ---------- */
-const CATEGORIES = ["All", ...categoriesData.map(c => c.name)];
-
-const categoryMap = categoriesData.reduce((acc, cat) => {
-  acc[cat.id] = cat.name;
-  return acc;
-}, {});
-
-const allProducts = productsData.map((p) => ({
-  id: p.id,
-  image: p.image || "src/assets/images/fallback.jpg",
-  category: categoryMap[p.categoryId] || "Skincare",
-  title: p.name,
-  price: `$${Number(p.price).toFixed(2)}`,
-  oldPrice: null,
-  rating: 5,
-  outOfStock: p.stockQuantity <= 0,
-  group: categoryMap[p.categoryId] || "Skincare"
-}));
+import "../../App.css";
 
 const PRODUCTS_PER_PAGE = 8;
 
@@ -32,6 +10,7 @@ function ProductSection({ title, products }) {
   return (
     <div className="products-section-wrapper">
       <h2 className="section-title">{title}</h2>
+
       <section className="products-list">
         {products.map((product) => (
           <Card
@@ -52,56 +31,327 @@ function ProductSection({ title, products }) {
 }
 
 export const Product = () => {
-  const [activeCategory, setActiveCategory] = useState("All");
-  const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [notification, setNotification] = useState("");
+  // ==============================
+  // State
+  // ==============================
 
-  // Listen for cart-added custom events dispatched by product cards
+  const [activeCategory, setActiveCategory] =
+    useState("All");
+
+  const [currentPage, setCurrentPage] =
+    useState(1);
+
+  const [searchTerm, setSearchTerm] =
+    useState("");
+
+  const [notification, setNotification] =
+    useState("");
+
+  const [productsData, setProductsData] =
+    useState([]);
+
+  const [categoriesData, setCategoriesData] =
+    useState([]);
+
+  // Loading and error state
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+
+  // ==============================
+  // Fetch products and categories
+  // ==============================
+
   useEffect(() => {
-    const handleCartNotification = (e) => {
-      setNotification(e.detail || "Item added to your cart!");
-      setTimeout(() => setNotification(""), 3000);
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const productsResponse = await fetch(
+          "/data/products.json"
+        );
+
+        const categoriesResponse = await fetch(
+          "/data/categories.json"
+        );
+
+        // Check products request
+        if (!productsResponse.ok) {
+          throw new Error(
+            "Failed to load products."
+          );
+        }
+
+        // Check categories request
+        if (!categoriesResponse.ok) {
+          throw new Error(
+            "Failed to load categories."
+          );
+        }
+
+        // Convert response to JSON
+        const products =
+          await productsResponse.json();
+
+        const categories =
+          await categoriesResponse.json();
+
+        // Save data
+        setProductsData(products);
+        setCategoriesData(categories);
+
+      } catch (error) {
+        console.error(
+          "Error fetching data:",
+          error
+        );
+
+        setError(
+          error.message ||
+            "Something went wrong while loading the products."
+        );
+
+      } finally {
+        setLoading(false);
+      }
     };
-    window.addEventListener('cart-added', handleCartNotification);
-    return () => window.removeEventListener('cart-added', handleCartNotification);
+
+    fetchData();
   }, []);
 
-  const normalize = (text) => text.toLowerCase().replace(/\s+/g, "");
-  const query = normalize(searchTerm);
-  const isFiltering = query !== "" || activeCategory !== "All";
 
-  const filteredProducts = allProducts.filter((product) => {
-    const matchesCategory =
-      activeCategory === "All" || product.group === activeCategory;
+  // ==============================
+  // Loading State
+  // ==============================
 
-    const matchesSearch =
-      query === "" ||
-      normalize(product.title).includes(query) ||
-      normalize(product.category).includes(query);
+  if (loading) {
+    return (
+      <div className="products-loading">
+        <p>Loading products...</p>
+      </div>
+    );
+  }
 
-    return matchesCategory && matchesSearch;
-  });
 
-  const totalPages = Math.ceil(filteredProducts.length / PRODUCTS_PER_PAGE);
-  const paginatedFilteredProducts = filteredProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  // ==============================
+  // Error State
+  // ==============================
 
-  const totalPagesAll = Math.ceil(allProducts.length / PRODUCTS_PER_PAGE);
-  const currentProducts = allProducts.slice(
-    (currentPage - 1) * PRODUCTS_PER_PAGE,
-    currentPage * PRODUCTS_PER_PAGE
-  );
+  if (error) {
+    return (
+      <div className="products-error">
+        <Icon icon="solar:danger-circle-linear" />
 
-  const activeDisplayProducts = isFiltering ? paginatedFilteredProducts : currentProducts;
-  const activeTotalPages = isFiltering ? totalPages : totalPagesAll;
+        <h2>
+          Unable to load products
+        </h2>
+
+        <p>{error}</p>
+
+        <button
+          type="button"
+          onClick={() => window.location.reload()}
+        >
+          Try Again
+        </button>
+      </div>
+    );
+  }
+
+
+  // ==============================
+  // Data Mapping
+  // ==============================
+
+  const CATEGORIES = [
+    "All",
+    ...categoriesData.map(
+      (c) => c.name
+    ),
+  ];
+
+  const categoryMap =
+    categoriesData.reduce(
+      (acc, cat) => {
+        acc[cat.id] = cat.name;
+        return acc;
+      },
+      {}
+    );
+
+  const allProducts =
+    productsData.map((p) => ({
+      id: p.id,
+
+      image:
+        p.image ||
+        "/assets/images/fallback.jpg",
+
+      category:
+        categoryMap[p.categoryId] ||
+        "Skincare",
+
+      title: p.name,
+
+      price:
+        `$${Number(p.price).toFixed(2)}`,
+
+      oldPrice: null,
+
+      rating: 5,
+
+      outOfStock:
+        p.stockQuantity <= 0,
+
+      group:
+        categoryMap[p.categoryId] ||
+        "Skincare",
+    }));
+
+
+  // ==============================
+  // Cart Notification
+  // ==============================
+
+  useEffect(() => {
+    const handleCartNotification =
+      (e) => {
+        setNotification(
+          e.detail ||
+            "Item added to your cart!"
+        );
+
+        setTimeout(() => {
+          setNotification("");
+        }, 3000);
+      };
+
+    window.addEventListener(
+      "cart-added",
+      handleCartNotification
+    );
+
+    return () => {
+      window.removeEventListener(
+        "cart-added",
+        handleCartNotification
+      );
+    };
+  }, []);
+
+
+  // ==============================
+  // Search
+  // ==============================
+
+  const normalize = (text) =>
+    text
+      .toLowerCase()
+      .replace(/\s+/g, "");
+
+  const query =
+    normalize(searchTerm);
+
+  const isFiltering =
+    query !== "" ||
+    activeCategory !== "All";
+
+
+  // ==============================
+  // Filter Products
+  // ==============================
+
+  const filteredProducts =
+    allProducts.filter(
+      (product) => {
+        const matchesCategory =
+          activeCategory === "All" ||
+          product.group ===
+            activeCategory;
+
+        const matchesSearch =
+          query === "" ||
+          normalize(
+            product.title
+          ).includes(query) ||
+          normalize(
+            product.category
+          ).includes(query);
+
+        return (
+          matchesCategory &&
+          matchesSearch
+        );
+      }
+    );
+
+
+  // ==============================
+  // Pagination
+  // ==============================
+
+  const totalPages =
+    Math.ceil(
+      filteredProducts.length /
+        PRODUCTS_PER_PAGE
+    );
+
+  const paginatedFilteredProducts =
+    filteredProducts.slice(
+      (currentPage - 1) *
+        PRODUCTS_PER_PAGE,
+
+      currentPage *
+        PRODUCTS_PER_PAGE
+    );
+
+  const totalPagesAll =
+    Math.ceil(
+      allProducts.length /
+        PRODUCTS_PER_PAGE
+    );
+
+  const currentProducts =
+    allProducts.slice(
+      (currentPage - 1) *
+        PRODUCTS_PER_PAGE,
+
+      currentPage *
+        PRODUCTS_PER_PAGE
+    );
+
+  const activeDisplayProducts =
+    isFiltering
+      ? paginatedFilteredProducts
+      : currentProducts;
+
+  const activeTotalPages =
+    isFiltering
+      ? totalPages
+      : totalPagesAll;
+
+
+  // ==============================
+  // Change Page
+  // ==============================
 
   const goToPage = (page) => {
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
+
+
+  // ==============================
+  // Clear Filters
+  // ==============================
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -109,125 +359,271 @@ export const Product = () => {
     setCurrentPage(1);
   };
 
+
+  // ==============================
+  // Page
+  // ==============================
+
   return (
     <div className="main-products-page">
       <div className="products-content-container">
-        
-        {/* Toast Notification Banner */}
+
+        {/* Toast Notification */}
         {notification && (
           <div className="reorder-toast">
             <Icon icon="solar:check-circle-bold" />
-            <span>{notification}</span>
+
+            <span>
+              {notification}
+            </span>
           </div>
         )}
 
-        {/* ----- Hero Section ----- */}
+
+        {/* Hero Section */}
         <section className="products-hero">
+
           <div className="title">
-            <div className="title-our-products">Our Products</div>
+
+            <div className="title-our-products">
+              Our Products
+            </div>
 
             <h1 className="title-natural">
-              NATURAL CARE.<br />
-              <span className="green">REAL BEAUTY.</span>
+              NATURAL CARE.
+              <br />
+
+              <span className="green">
+                REAL BEAUTY.
+              </span>
             </h1>
 
             <p className="title-description">
-              Thoughtful skin care made with plant-powered ingredients,
-              designed to bring out your natural radiance.
+              Thoughtful skin care made
+              with plant-powered
+              ingredients, designed to
+              bring out your natural
+              radiance.
             </p>
 
-            <div className="category-filters" role="tablist" aria-label="Product Categories">
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeCategory === cat}
-                  className={`category-pill ${activeCategory === cat ? "active" : ""}`}
-                  onClick={() => {
-                    setActiveCategory(cat);
-                    setCurrentPage(1);
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
+
+            {/* Category Filters */}
+            <div
+              className="category-filters"
+              role="tablist"
+              aria-label="Product Categories"
+            >
+              {CATEGORIES.map(
+                (cat) => (
+                  <button
+                    key={cat}
+                    type="button"
+                    role="tab"
+                    aria-selected={
+                      activeCategory ===
+                      cat
+                    }
+                    className={`category-pill ${
+                      activeCategory ===
+                      cat
+                        ? "active"
+                        : ""
+                    }`}
+                    onClick={() => {
+                      setActiveCategory(
+                        cat
+                      );
+
+                      setCurrentPage(
+                        1
+                      );
+                    }}
+                  >
+                    {cat}
+                  </button>
+                )
+              )}
             </div>
+
           </div>
 
-          <form className="search" onSubmit={(e) => e.preventDefault()} role="search">
+
+          {/* Search */}
+          <form
+            className="search"
+            onSubmit={(e) =>
+              e.preventDefault()
+            }
+            role="search"
+          >
             <input
               type="text"
               placeholder="Find your favorite products..."
               value={searchTerm}
               onChange={(e) => {
-                setSearchTerm(e.target.value);
+                setSearchTerm(
+                  e.target.value
+                );
+
                 setCurrentPage(1);
               }}
               aria-label="Search products"
             />
-            <button className="search-btn" type="submit" aria-label="Submit search">
+
+            <button
+              className="search-btn"
+              type="submit"
+              aria-label="Submit search"
+            >
               <Icon icon="solar:magnifer-linear" />
             </button>
           </form>
+
         </section>
 
-        {/* ----- Product Area ----- */}
+
+        {/* Product Area */}
         {isFiltering ? (
-          filteredProducts.length > 0 ? (
+
+          filteredProducts.length >
+          0 ? (
+
             <ProductSection
               title={`Search Results (${filteredProducts.length})`}
-              products={activeDisplayProducts}
+              products={
+                activeDisplayProducts
+              }
             />
+
           ) : (
+
             <div className="no-products-state">
-              <Icon icon="solar:box-minimalistic-linear" className="no-products-icon" />
-              <h2 className="section-title">No products found</h2>
-              <p>We couldn't find anything matching your search. Try adjusting your filters.</p>
-              <button type="button" className="clear-filters-btn" onClick={clearFilters}>
+
+              <Icon
+                icon="solar:box-minimalistic-linear"
+                className="no-products-icon"
+              />
+
+              <h2 className="section-title">
+                No products found
+              </h2>
+
+              <p>
+                We couldn't find
+                anything matching
+                your search. Try
+                adjusting your
+                filters.
+              </p>
+
+              <button
+                type="button"
+                className="clear-filters-btn"
+                onClick={
+                  clearFilters
+                }
+              >
                 Clear filters
               </button>
+
             </div>
           )
+
         ) : (
-          <ProductSection title="All Products" products={currentProducts} />
+
+          <ProductSection
+            title="All Products"
+            products={
+              currentProducts
+            }
+          />
+
         )}
 
-        {/* ----- Pagination ----- */}
+
+        {/* Pagination */}
         {activeTotalPages > 1 && (
-          <nav className="pagination" aria-label="Product pagination">
+
+          <nav
+            className="pagination"
+            aria-label="Product pagination"
+          >
+
             <button
               type="button"
               className="page-arrow"
-              onClick={() => goToPage(Math.max(1, currentPage - 1))}
-              disabled={currentPage === 1}
+              onClick={() =>
+                goToPage(
+                  Math.max(
+                    1,
+                    currentPage - 1
+                  )
+                )
+              }
+              disabled={
+                currentPage === 1
+              }
               aria-label="Previous page"
             >
               <Icon icon="solar:alt-arrow-left-linear" />
             </button>
 
-            {Array.from({ length: activeTotalPages }, (_, i) => i + 1).map((page) => (
+
+            {Array.from(
+              {
+                length:
+                  activeTotalPages,
+              },
+              (_, i) => i + 1
+            ).map((page) => (
+
               <button
                 key={page}
                 type="button"
-                className={`page-number ${currentPage === page ? "active" : ""}`}
-                onClick={() => goToPage(page)}
-                aria-current={currentPage === page ? "page" : undefined}
+                className={`page-number ${
+                  currentPage ===
+                  page
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() =>
+                  goToPage(page)
+                }
+                aria-current={
+                  currentPage ===
+                  page
+                    ? "page"
+                    : undefined
+                }
               >
                 {page}
               </button>
+
             ))}
+
 
             <button
               type="button"
               className="page-arrow"
-              onClick={() => goToPage(Math.min(activeTotalPages, currentPage + 1))}
-              disabled={currentPage === activeTotalPages}
+              onClick={() =>
+                goToPage(
+                  Math.min(
+                    activeTotalPages,
+                    currentPage + 1
+                  )
+                )
+              }
+              disabled={
+                currentPage ===
+                activeTotalPages
+              }
               aria-label="Next page"
             >
               <Icon icon="solar:alt-arrow-right-linear" />
             </button>
+
           </nav>
+
         )}
 
       </div>
